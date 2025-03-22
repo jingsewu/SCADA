@@ -1,16 +1,14 @@
 package org.openwes.api.platform.application.service.handler;
 
 import com.alibaba.fastjson2.JSONArray;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.openwes.api.platform.application.context.RequestHandleContext;
 import org.openwes.api.platform.application.service.RequestHandlerService;
-import org.openwes.api.platform.infrastructure.WmsClientService;
 import org.openwes.api.platform.utils.CommonUtils;
 import org.openwes.api.platform.utils.ConverterHelper;
 import org.openwes.common.utils.utils.JsonUtils;
 import org.openwes.common.utils.utils.ValidatorUtils;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,9 +19,6 @@ import java.util.Objects;
 @Service
 @Slf4j
 public abstract class RequestHandler implements RequestHandlerService {
-
-    @Autowired
-    protected WmsClientService coreClientService;
 
     @Override
     public void convertParam(RequestHandleContext context) {

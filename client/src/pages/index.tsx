@@ -35,10 +35,8 @@ export interface Navigations {
 
 export interface State {
     menus: Object
-    selectedWarehouse: string
     selectedApp: string
     applications: MenuProps["items"]
-    warehouses: []
     hasLoadMenu: boolean
     navigations: Navigations[]
     iframeShow: number
@@ -55,10 +53,8 @@ export interface AdminProps extends RouteComponentProps<any> {
 export default class Admin extends React.Component<AdminProps, State> {
     state: State = {
         menus: Object,
-        selectedWarehouse: "",
         selectedApp: "",
         applications: [],
-        warehouses: [],
         hasLoadMenu: false,
         navigations: [],
         iframeShow: 0,
@@ -73,13 +69,6 @@ export default class Admin extends React.Component<AdminProps, State> {
             navigations: [menus[value.key]] || [],
             iframeShow: menus[value.key].iframeShow,
             iframeUrl: menus[value.key].children?.[0]?.path
-        })
-    }
-
-    onWarehouseChange = (value: any) => {
-        this.props.store.warehouse.setWarehouseCode(value)
-        this.setState({
-            selectedWarehouse: value
         })
     }
 
@@ -165,10 +154,6 @@ export default class Admin extends React.Component<AdminProps, State> {
                     iframeUrl: menus[selectedApp].children?.[0]?.path
                 })
 
-                // 角色的仓库权限为空时，不初始化仓库
-                if (res.data.warehouses) {
-                    this.initWarehouseSelect(res.data.warehouses)
-                }
             })
         }
     }
@@ -179,40 +164,6 @@ export default class Admin extends React.Component<AdminProps, State> {
             url: `/mdm/config/dictionary/getAll`
         }).then((res: any) => {
             localStorage.setItem("dictionary", JSON.stringify(res?.data))
-        })
-    }
-
-    private initWarehouseSelect(warehouses: Array<string>) {
-        request({
-            method: "post",
-            url:
-                "/search/search/searchSelectResult?perPage=1000&activePage=1&value-op=il&value=" +
-                warehouses.join(","),
-            data: {
-                searchIdentity: "SearchWarehouseMainData",
-                searchObject: {
-                    tables: "m_warehouse_main_data"
-                },
-                showColumns: [
-                    {
-                        dbField: "warehouse_code",
-                        name: "value",
-                        javaType: "java.lang.String"
-                    },
-                    {
-                        dbField: "warehouse_name",
-                        name: "label",
-                        javaType: "java.lang.String"
-                    }
-                ]
-            }
-        }).then((res: any) => {
-            let selectedWarehouse = res.data.options[0]?.value
-            this.setState({
-                selectedWarehouse: selectedWarehouse,
-                warehouses: res.data.options
-            })
-            this.props.store.warehouse.setWarehouseCode(selectedWarehouse)
         })
     }
 
@@ -282,10 +233,7 @@ export default class Admin extends React.Component<AdminProps, State> {
                             <LayoutHeader
                                 selectedApp={this.state.selectedApp}
                                 applications={this.state.applications}
-                                selectedWarehouse={this.state.selectedWarehouse}
-                                warehouses={this.state.warehouses}
                                 onApplicationChange={this.onApplicationChange}
-                                onWarehouseChange={this.onWarehouseChange}
                                 onLanguageChange={this.onLanguageChange}
                             />
                         }

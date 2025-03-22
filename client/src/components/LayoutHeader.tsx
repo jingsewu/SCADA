@@ -41,10 +41,7 @@ interface HeaderProps {
 const Header = ({
     selectedApp,
     applications,
-    selectedWarehouse,
-    warehouses,
     onApplicationChange,
-    onWarehouseChange,
     onLanguageChange
 }: HeaderProps) => {
     const history = useHistory()
@@ -123,15 +120,6 @@ const Header = ({
                 </div>
 
                 <div className="m-l-auto hidden-xs pull-right">
-                    {selectedApp === "wms" && (
-                        <Select
-                            placeholder="select warehouse"
-                            optionFilterProp="children"
-                            onChange={onWarehouseChange}
-                            value={selectedWarehouse}
-                            options={warehouses}
-                        />
-                    )}
                     <Language onLanguageChange={onLanguageChange} />
                     <Dropdown
                         menu={{

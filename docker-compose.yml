@@ -22,35 +22,19 @@ services:
     depends_on:
       - mysql
       - redis
-      - nacos
     networks:
       - my-network
 
-  # Station Server
-  station-server:
+  # scada Server
+  scada-server:
     build:
       context: ./server/
-      target: station
-    ports:
-      - "9040:9040"
-    depends_on:
-      - mysql
-      - redis
-      - nacos
-    networks:
-      - my-network
-
-  # WES Server
-  wes-server:
-    build:
-      context: ./server/
-      target: wes
+      target: scada
     ports:
       - "9010:9010"
     depends_on:
       - mysql
       - redis
-      - nacos
     networks:
       - my-network
 
@@ -86,25 +70,6 @@ services:
       timeout: 10s
       retries: 10
       start_period: 30s
-    networks:
-      my-network:
-        aliases:
-          - nacos.openwes.com
-
-  # Nacos Service
-  nacos:
-    image: nacos/nacos-server:latest
-    ports:
-      - "8848:8848"
-    environment:
-      MODE: standalone
-      SPRING_DATASOURCE_PLATFORM: mysql
-      MYSQL_SERVICE_HOST: mysql
-      MYSQL_SERVICE_DB_NAME: nacos_config
-      MYSQL_SERVICE_USER: root
-      MYSQL_SERVICE_PASSWORD: root
-    depends_on:
-      - mysql
     networks:
       my-network:
         aliases:

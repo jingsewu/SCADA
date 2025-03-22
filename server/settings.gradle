@@ -3,6 +3,9 @@ rootProject.name = 'SCADA'
 include 'modules-user:user'
 include 'modules-user:user-api'
 
+include 'modules-scada:scada-core'
+include 'modules-scada:scada-api'
+
 include 'modules-gateway:gateway-core'
 
 include 'modules-api-platform:api-platform'

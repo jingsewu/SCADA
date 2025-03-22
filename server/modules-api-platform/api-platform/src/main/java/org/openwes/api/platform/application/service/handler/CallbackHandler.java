@@ -6,20 +6,15 @@ import org.openwes.api.platform.api.exception.error_code.ApiPlatformErrorCodeEnu
 import org.openwes.api.platform.application.context.CallbackHandleContext;
 import org.openwes.api.platform.application.service.CallbackHandlerService;
 import org.openwes.api.platform.domain.entity.ApiPO;
-import org.openwes.api.platform.infrastructure.WmsClientService;
 import org.openwes.api.platform.utils.ConverterHelper;
 import org.openwes.common.utils.exception.code_enum.CommonErrorDescEnum;
 import org.openwes.common.utils.http.Response;
 import org.openwes.common.utils.utils.JsonUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 public abstract class CallbackHandler implements CallbackHandlerService {
-
-    @Autowired
-    protected WmsClientService coreClientService;
 
     @Override
     public void convert(CallbackHandleContext context) {

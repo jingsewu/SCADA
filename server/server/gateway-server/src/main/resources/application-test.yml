@@ -1,0 +1,72 @@
+spring:
+  cloud:
+    gateway:
+      httpclient:
+        websocket:
+          max-frame-payload-length: 10240000
+      routes:
+        - id: scada
+          uri: http://${nacos.openwes.com:localhost}:9010
+          predicates:
+            - Path=/scada/**
+          filters:
+            - RewritePath=/scada/(?<segment>.*) , /$\{segment}
+        - id: user
+          uri: http://${nacos.openwes.com:localhost}:9010
+          predicates:
+            - Path=/user/**
+          filters:
+            - RewritePath=/user/(?<segment>.*) , /$\{segment}
+        - id: mdm
+          uri: http://${nacos.openwes.com:localhost}:9010
+          predicates:
+            - Path=/mdm/**
+          filters:
+            - RewritePath=/mdm/(?<segment>.*) , /$\{segment}
+        - id: search
+          uri: http://${nacos.openwes.com:localhost}:9010
+          predicates:
+            - Path=/search/**
+          filters:
+            - RewritePath=/search/(?<segment>.*) , /$\{segment}
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    default-property-inclusion: NON_NULL
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+  redis:
+    redisson:
+      config: |
+        singleServerConfig:
+          idleConnectionTimeout: 100000
+          connectTimeout: 10000
+          timeout: 3000
+          retryAttempts: 3
+          retryInterval: 1500
+          password: null
+          subscriptionsPerConnection: 5
+          clientName: null
+          address: redis://nacos.openwes.com:6379
+          subscriptionConnectionMinimumIdleSize: 1
+          subscriptionConnectionPoolSize: 50
+          connectionMinimumIdleSize: 32
+          connectionPoolSize: 64
+          database: 3
+          dnsMonitoringInterval: 5000
+        threads: 0
+        nettyThreads: 0
+        codec:
+          class: "org.redisson.codec.JsonJacksonCodec"
+        transportMode: "NIO"
+        lockWatchdogTimeout: 10000
+server:
+  max-http-request-header-size: 1024000
+logging:
+  config: classpath:logback-spring.xml
+  max-file-size: 250MB
+  max-history: 168
+  total-size-cap: 50GB
+

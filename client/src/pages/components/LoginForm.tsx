@@ -1,7 +1,7 @@
 import * as React from "react"
 import {Button, Checkbox, Form, Input, Typography} from "antd"
 import {RouteComponentProps} from "react-router-dom"
-import Message, {MessageType} from "@/pages/wms/station/widgets/message"
+import Message, {MessageType} from "@/pages/components/message"
 
 import {IMainStore} from "@/stores"
 import {inject, observer} from "mobx-react"

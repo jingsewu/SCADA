@@ -7,12 +7,8 @@
 
     <!-- Create a table -->
     <changeSet id="init" author="Kinser">
-        <sqlFile path="classpath:db/sql/init/wes/init_create_table.sql"/>
         <sqlFile path="classpath:db/sql/init/user/init_user.sql"/>
         <sqlFile path="classpath:db/sql/init/user/init_menu.sql"/>
-        <sqlFile path="classpath:db/sql/init/wes/init_dictionary.sql"/>
-        <sqlFile path="classpath:db/sql/init/wes/init_address.sql"/>
-        <sqlFile path="classpath:db/sql/init/wes/init_api.sql"/>
     </changeSet>
 
 </databaseChangeLog>

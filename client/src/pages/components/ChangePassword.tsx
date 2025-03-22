@@ -1,7 +1,7 @@
 import { Form, Input, Modal } from "antd"
 import React from "react"
 import request from "@/utils/requestInterceptor"
-import Message, { MessageType } from "@/pages/wms/station/widgets/message"
+import Message, {MessageType} from "@/pages/components/message"
 import { useTranslation } from "react-i18next"
 
 interface ChangePasswordFormProps {

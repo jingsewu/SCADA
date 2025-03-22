@@ -52,13 +52,13 @@ public class SecurityConfiguration {
                                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .anyRequest().permitAll()
-                ).oauth2Login(customizer -> customizer // Configure OAuth2 login explicitly
-                        .authorizationEndpoint(endpoint -> endpoint
-                                .baseUri("/oauth2/authorization") // Authorization URI
-                        )
-                        .redirectionEndpoint(endpoint -> endpoint
-                                .baseUri("/login/oauth2/code/*") // Redirect URI for OAuth2 provider
-                        ).successHandler(new CustomAuthenticationSuccessHandler(userService, jwtUtils))
+//                ).oauth2Login(customizer -> customizer // Configure OAuth2 login explicitly
+//                        .authorizationEndpoint(endpoint -> endpoint
+//                                .baseUri("/oauth2/authorization") // Authorization URI
+//                        )
+//                        .redirectionEndpoint(endpoint -> endpoint
+//                                .baseUri("/login/oauth2/code/*") // Redirect URI for OAuth2 provider
+//                        ).successHandler(new CustomAuthenticationSuccessHandler(userService, jwtUtils))
                 )
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
