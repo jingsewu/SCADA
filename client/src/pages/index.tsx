@@ -15,7 +15,7 @@ import RobotSvg from "@/icon/fontIcons/robot.svg" // path to your '*.svg' file.
 import Chatbot from "@/components/Chatbot"
 import style from "./index.module.scss"
 import classNames from "classnames/bind"
-import {Translation, useTranslation} from "react-i18next";
+import {Translation} from "react-i18next";
 
 const cx = classNames.bind(style)
 

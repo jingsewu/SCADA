@@ -31,10 +31,7 @@ interface Option {
 interface HeaderProps {
     selectedApp: string
     applications: MenuProps["items"]
-    selectedWarehouse: string
-    warehouses: Option[]
     onApplicationChange: (params: any) => void
-    onWarehouseChange: (params: any) => void
     onLanguageChange: (params: any) => void
 }
 
