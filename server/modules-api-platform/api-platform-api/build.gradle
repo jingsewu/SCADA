@@ -1,0 +1,9 @@
+dependencies {
+    implementation project(path: ":modules-utils:common-utils", configuration: 'default')
+
+    implementation 'io.swagger.core.v3:swagger-annotations'
+}
+
+test {
+    useJUnitPlatform()
+}
