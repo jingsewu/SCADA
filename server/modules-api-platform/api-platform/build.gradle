@@ -11,10 +11,11 @@ dependencies {
 
     implementation 'org.apache.dubbo:dubbo-spring-boot-starter'
 
-    implementation 'org.apache.httpcomponents.client5:httpclient5'
     implementation "org.freemarker:freemarker"
     implementation 'org.apache.commons:commons-lang3'
     implementation 'commons-io:commons-io'
+
+    implementation 'com.squareup.okhttp3:okhttp'
 
     implementation 'org.graalvm.js:js'
     implementation 'org.graalvm.js:js-scriptengine'

@@ -10,8 +10,9 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.openwes.api.platform.api.constants.ApiCallTypeEnum;
 import org.openwes.api.platform.api.constants.CallbackApiTypeEnum;
-import org.openwes.api.platform.utils.AuthUtils;
-import org.openwes.api.platform.utils.HttpHelper;
+import org.openwes.api.platform.api.constants.ProtocolType;
+import org.openwes.api.platform.utils.http.HttpUtils;
+import org.openwes.api.platform.utils.tcp.TcpUtils;
 import org.openwes.common.utils.base.UpdateUserPO;
 import org.openwes.common.utils.constants.MarkConstant;
 import org.openwes.common.utils.id.IdGenerator;
@@ -50,34 +51,13 @@ public class ApiPO extends UpdateUserPO {
     @Column(nullable = false, columnDefinition = "varchar(20) comment 'api 类型'")
     private ApiCallTypeEnum apiType;
 
-    @Column(length = 128, columnDefinition = "varchar(128) comment '请求url'")
-    private String url = "";
-    @Column(columnDefinition = "varchar(20) not null comment '请求方式'")
-    private String method = "";
-    @Column(columnDefinition = "varchar(20) comment '请求编码'")
-    private String encoding = "";
-    @Column(columnDefinition = "varchar(100) not null comment '请求格式'")
-    private String format = "";
-    @Column(columnDefinition = "json comment '回传请求头'")
-    @JdbcTypeCode(SqlTypes.JSON)
-    private Map<String, String> headers;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, columnDefinition = "varchar(20) comment '协议类型'")
+    private ProtocolType protocol = ProtocolType.HTTP; // Default to HTTP
 
-    //是否开启token验证，如果需要则需要先请求token，然后再调用
-    private boolean auth;
-    @Column(columnDefinition = "varchar(128) comment 'auth url'")
-    private String authUrl = "";
-    @Column(columnDefinition = "varchar(64) comment 'grant type'")
-    private String grantType = "";
-    @Column(columnDefinition = "varchar(64) comment 'auth username'")
-    private String username = "";
-    @Column(columnDefinition = "varchar(64) comment 'auth password'")
-    private String password = "";
-    @Column(columnDefinition = "varchar(64) comment 'auth secretId'")
-    private String secretId = "";
-    @Column(columnDefinition = "varchar(64) comment 'auth secretKey'")
-    private String secretKey = "";
-    @Column(columnDefinition = "varchar(64) comment 'auth tokenName'")
-    private String tokenName = "";
+    @Column(columnDefinition = "json comment '协议专用配置'")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private Map<String, Object> protocolConfig;
 
     /**
      * 是否同步执行回调
@@ -91,26 +71,13 @@ public class ApiPO extends UpdateUserPO {
     }
 
     public Object execute(Object targetObj) throws Exception {
-
-        String accessToken = null;
-        if (auth) {
-            AuthUtils.Authentication authentication = new AuthUtils.Authentication()
-                    .setAuthUrl(this.authUrl)
-                    .setEncoding(this.encoding)
-                    .setGrantType(this.grantType)
-                    .setPassword(this.password)
-                    .setUsername(this.username)
-                    .setSecretId(this.secretId)
-                    .setTokenName(this.tokenName)
-                    .setSecretKey(this.secretKey);
-
-            accessToken = AuthUtils.getAccessToken(authentication);
+        if (this.protocol == ProtocolType.HTTP) {
+            return HttpUtils.execute(this.protocolConfig, targetObj);
+        } else if (this.protocol == ProtocolType.TCP) {
+            return TcpUtils.execute(this.protocolConfig, targetObj);
+        } else {
+            throw new UnsupportedOperationException("Unsupported protocol type: " + this.protocol);
         }
-
-        return HttpHelper.request(new HttpHelper.HttpRequest().setRequestObj(targetObj)
-                .setEncoding(this.encoding).setFormat(this.format)
-                .setMethod(this.method).setFormat(this.format).setUrl(this.url)
-                .setToken(accessToken).setHeaders(this.headers));
     }
 
     public String resolveCallbackType() {
