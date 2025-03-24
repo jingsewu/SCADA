@@ -17,7 +17,6 @@ public class ApiKeyServiceImpl implements ApiKeyService {
     private final ApiKeyRepository apiKeyRepository;
 
     public ApiKeyPO createApiKey(ApiKeyPO apiKey) {
-
         apiKey.generateApiKey();
         return apiKeyRepository.save(apiKey);
     }

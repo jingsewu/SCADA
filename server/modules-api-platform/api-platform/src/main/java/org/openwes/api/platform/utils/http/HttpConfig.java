@@ -45,6 +45,8 @@ public class HttpConfig {
         private String secretKey;
 
         private String tokenName = "access_token";
+        private String expiresInField;
+
         private String encodingOrDefault = StandardCharsets.UTF_8.name();
     }
 
