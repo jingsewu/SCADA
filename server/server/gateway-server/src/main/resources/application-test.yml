@@ -29,6 +29,12 @@ spring:
             - Path=/search/**
           filters:
             - RewritePath=/search/(?<segment>.*) , /$\{segment}
+        - id: api-platform
+          uri: http://${nacos.openwes.com:localhost}:9010
+          predicates:
+            - Path=/api-platform/**
+          filters:
+            - RewritePath=/api-platform/(?<segment>.*) , /$\{segment}
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: Asia/Shanghai

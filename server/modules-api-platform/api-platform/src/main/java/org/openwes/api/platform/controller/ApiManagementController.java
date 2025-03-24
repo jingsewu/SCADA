@@ -1,14 +1,14 @@
 package org.openwes.api.platform.controller;
 
-import org.openwes.api.platform.controller.param.api.ApiAddParam;
-import org.openwes.api.platform.controller.param.api.ApiUpdateParam;
-import org.openwes.api.platform.domain.service.ApiService;
-import org.openwes.common.utils.http.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.openwes.api.platform.controller.param.api.ApiAddParam;
+import org.openwes.api.platform.controller.param.api.ApiUpdateParam;
+import org.openwes.api.platform.domain.service.ApiService;
+import org.openwes.common.utils.http.Response;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,6 +31,12 @@ public class ApiManagementController {
     public Object update(@RequestBody @Valid ApiUpdateParam param) {
         apiService.updateApi(param);
         return Response.success();
+    }
+
+    @GetMapping("get/{code}")
+    @Operation(summary = "根据code查询")
+    public Object getApiByCode(@Parameter(description = "接口 ID") @PathVariable("code") String code) {
+        return Response.success(apiService.getByCode(code));
     }
 
     @DeleteMapping("/{id}")

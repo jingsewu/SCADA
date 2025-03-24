@@ -3,7 +3,7 @@ import {
     api_api_add,
     api_api_config_get,
     api_api_config_update,
-    api_api_delete,
+    api_api_delete, api_api_get,
     api_api_update,
     editorDidMount
 } from "@/pages/api_platform/constants/api_constant"
@@ -31,105 +31,177 @@ const baseform = [
         label: "interfacePlatform.interfaceManagement.table.interfaceType",
         type: "select",
         name: "apiType",
-        source: "${dictionary.ApiType}",
+        source: "${dictionary.ApiCallType}",
         required: true
     },
     {
-        label: "interfacePlatform.interfaceManagement.table.interfaceAddress",
-        type: "input-text",
-        name: "url",
-        validations: "isUrl"
+        "type": "switch",
+        "name": "enabled",
+        "label": "Enable Configuration",
+        "value": true
     },
     {
-        label: "interfacePlatform.interfaceManagement.table.interfaceRequestMethod",
-        type: "select",
-        name: "method",
-        source: "${dictionary.HttpMethod}"
+        "type": "switch",
+        "name": "syncCallback",
+        "label": "synchronize callback",
+        "value": true
     },
     {
-        label: "interfacePlatform.interfaceManagement.table.interfaceRequestEncoding",
-        type: "input-text",
-        name: "encoding"
+        "type": "select",
+        "name": "protocol",
+        "label": "Protocol Type",
+        "required": true,
+        "options": [
+            {"label": "HTTP", "value": "HTTP"},
+            {"label": "TCP", "value": "TCP"}
+        ],
+        "value": "HTTP"
     },
     {
-        label: "interfacePlatform.interfaceManagement.table.API_request_header",
-        type: "input-kv",
-        name: "headers",
-        value: "${DECODEJSON(headersStr)}"
-    },
-    {
-        label: "interfacePlatform.interfaceManagement.table.interfaceRequestFormat",
-        type: "select",
-        name: "format",
-        source: "${dictionary.MediaType}",
-        required: true
-    },
-    {
-        label: "interfacePlatform.interfaceManagement.table.isCertificationRequired",
-        type: "switch",
-        name: "auth",
-        required: true,
-        value: false
-    },
-    {
-        label: "interfacePlatform.interfaceManagement.table.authenticationServiceAddress",
-        type: "input-text",
-        name: "authUrl",
-        visibleOn: "${auth}"
-    },
-    {
-        label: "interfacePlatform.interfaceManagement.table.typeOfCertification",
-        type: "input-text",
-        name: "grantType",
-        visibleOn: "${auth}"
-    },
-    {
-        label: "interfacePlatform.interfaceManagement.table.authenticationServiceUsername",
-        type: "input-text",
-        name: "username",
-        visibleOn: "${auth}"
-    },
-    {
-        label: "interfacePlatform.interfaceManagement.table.authenticationServicePassword",
-        type: "input-text",
-        name: "password",
-        visibleOn: "${auth}"
-    },
-    {
-        label: "interfacePlatform.interfaceManagement.table.keysID",
-        type: "input-text",
-        name: "secretId",
-        visibleOn: "${auth}"
-    },
-    {
-        label: "interfacePlatform.interfaceManagement.table.keys",
-        type: "input-text",
-        name: "secretKey",
-        visibleOn: "${auth}"
-    },
-    {
-        label: "interfacePlatform.interfaceManagement.table.tokenName",
-        description: "interfacePlatform.interfaceManagement.table.tokenName.description",
-        type: "input-text",
-        name: "tokenName",
-        visibleOn: "${auth}"
-    },
-    {
-        label: "table.whetherEnabled",
-        type: "switch",
-        name: "enabled",
-        value: true
-    },
-    {
-        label: "table.syncCallback",
-        type: "switch",
-        name: "syncCallback",
-        value: false
-    },
-    {
-        label: "interfacePlatform.interfaceManagement.form.interfaceDescription",
-        type: "textarea",
-        name: "description"
+        "type": "tabs",
+        "visibleOn": "data.apiType === 'CALLBACK'",
+        "tabs": [
+            {
+                "title": "HTTP Configuration",
+                "body": [
+                    {
+                        "type": "input-text",
+                        "name": "protocolConfig.url",
+                        "label": "API URL",
+                        "required": true,
+                        "validations": {
+                            "isUrl": true
+                        }
+                    },
+                    {
+                        "type": "select",
+                        "name": "protocolConfig.method",
+                        "label": "HTTP Method",
+                        "value": "GET",
+                        "options": ["GET", "POST", "PUT", "PATCH", "DELETE"]
+                    },
+                    {
+                        "type": "input-text",
+                        "name": "protocolConfig.encoding",
+                        "label": "Encoding",
+                        "value": "UTF-8"
+                    },
+                    {
+                        "type": "combo",
+                        "name": "protocolConfig.headers",
+                        "label": "Headers",
+                        "multiple": true,
+                        "items": [
+                            {
+                                "type": "input-text",
+                                "name": "key",
+                                "placeholder": "Header name"
+                            },
+                            {
+                                "type": "input-text",
+                                "name": "value",
+                                "placeholder": "Header value"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "input-number",
+                        "name": "protocolConfig.timeoutMillis",
+                        "label": "Timeout (ms)",
+                        "min": 1000,
+                        "value": 10000
+                    },
+                    {
+                        "type": "switch",
+                        "name": "protocolConfig.enableAuth",
+                        "label": "Enable Authentication",
+                        "value": false
+                    },
+                    {
+                        "type": "container",
+                        "visibleOn": "data.protocolConfig.enableAuth",
+                        "body": [
+                            {
+                                "type": "input-text",
+                                "name": "protocolConfig.authConfig.authUrl",
+                                "label": "Auth URL",
+                                "required": true
+                            },
+                            {
+                                "type": "select",
+                                "name": "protocolConfig.authConfig.grantType",
+                                "label": "Grant Type",
+                                "options": [
+                                    {"label": "Client Credentials", "value": "client_credentials"},
+                                    {"label": "Password", "value": "password"}
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "visibleOn": "data.protocol === 'HTTP'"
+            },
+            {
+                "title": "TCP Configuration",
+                "body": [
+                    {
+                        "type": "input-text",
+                        "name": "protocolConfig.host",
+                        "label": "Host",
+                        "required": true
+                    },
+                    {
+                        "type": "input-number",
+                        "name": "protocolConfig.port",
+                        "label": "Port",
+                        "required": true,
+                        "min": 1,
+                        "max": 65535
+                    },
+                    {
+                        "type": "input-text",
+                        "name": "protocolConfig.delimiter",
+                        "label": "Message Delimiter",
+                        "value": "\\n"
+                    },
+                    {
+                        "type": "input-number",
+                        "name": "protocolConfig.maxConnections",
+                        "label": "Max Connections",
+                        "min": 1,
+                        "value": 10
+                    },
+                    {
+                        "type": "switch",
+                        "name": "protocolConfig.ssl.enabled",
+                        "label": "Enable SSL",
+                        "value": false
+                    },
+                    {
+                        "type": "container",
+                        "visibleOn": "data.protocolConfig.ssl.enabled",
+                        "body": [
+                            {
+                                "type": "input-text",
+                                "name": "protocolConfig.ssl.protocol",
+                                "label": "SSL Protocol"
+                            },
+                            {
+                                "type": "input-text",
+                                "name": "protocolConfig.ssl.truststorePath",
+                                "label": "Truststore Path"
+                            },
+                            {
+                                "type": "input-text",
+                                "name": "protocolConfig.ssl.keystorePath",
+                                "label": "Keystore Path"
+                            }
+                        ]
+                    }
+                ],
+                "visibleOn": "data.protocol === 'TCP'"
+            }
+        ]
     }
 ]
 
@@ -154,7 +226,7 @@ const configForm = [
         name: "jsParamConverter",
         description:
             "interfacePlatform.interfaceManagement.form.requestTransformationScript.description",
-        visibleOn: "${paramConverterType == 'JS'}",
+        visibleOn: "${paramConverterType == 'JAVA'}",
         language: "java",
         placeholder: "Enter your java code here and named function as convert. for example: \n" +
             "                //java:convert \n" +
@@ -175,7 +247,7 @@ const configForm = [
             fontSize: 14,
             wordWrap: "on",
         },
-        editorDidMount: editorDidMount
+        // editorDidMount: editorDidMount
     },
     {
         label: "interfacePlatform.interfaceManagement.form.requestTransformationScript",
@@ -194,7 +266,7 @@ const configForm = [
         label: "interfacePlatform.interfaceManagement.form.responseTransformationScripts",
         type: "editor",
         name: "jsResponseConverter",
-        visibleOn: "${responseConverterType == 'JS'}",
+        visibleOn: "${responseConverterType == 'JAVA'}",
         language: "java",
         placeholder: "Enter your java code here and named function as convert. for example: \n" +
             "                //java:convert \n" +
@@ -215,7 +287,7 @@ const configForm = [
             fontSize: 14,
             wordWrap: "on",
         },
-        editorDidMount: editorDidMount
+        // editorDidMount: editorDidMount
     },
     {
         label: "interfacePlatform.interfaceManagement.form.responseTransformationScripts",
@@ -270,30 +342,6 @@ const columns = [
         }
     },
     {
-        name: "method",
-        label: "interfacePlatform.interfaceManagement.table.interfaceRequestMethod"
-    },
-    {
-        name: "format",
-        label: "interfacePlatform.interfaceManagement.table.interfaceRequestFormat"
-    },
-    {
-        name: "encoding",
-        label: "interfacePlatform.interfaceManagement.table.interfaceRequestEncoding"
-    },
-    {
-        name: "headersStr",
-        dbField: "headers",
-        label: "interfacePlatform.interfaceManagement.table.API_request_header",
-        hidden: true
-    },
-    {
-        name: "auth",
-        label: "interfacePlatform.interfaceManagement.table.isCertificationRequired",
-        type: "mapping",
-        map: true_false_options
-    },
-    {
         name: "enabled",
         label: "table.whetherEnabled",
         type: "mapping",
@@ -304,46 +352,6 @@ const columns = [
         label: "table.syncCallback",
         type: "mapping",
         map: true_false_options
-    },
-    {
-        name: "url",
-        label: "请求url",
-        hidden: true
-    },
-    {
-        name: "authUrl",
-        label: "interfacePlatform.interfaceManagement.table.authenticationServiceAddress",
-        hidden: true
-    },
-    {
-        name: "grantType",
-        label: "interfacePlatform.interfaceManagement.table.typeOfCertification",
-        hidden: true
-    },
-    {
-        name: "username",
-        label: "interfacePlatform.interfaceManagement.table.authenticationServiceUsername",
-        hidden: true
-    },
-    {
-        name: "password",
-        label: "interfacePlatform.interfaceManagement.table.authenticationServicePassword",
-        hidden: true
-    },
-    {
-        name: "secretId",
-        label: "interfacePlatform.interfaceManagement.table.keysID",
-        hidden: true
-    },
-    {
-        name: "secretKey",
-        label: "interfacePlatform.interfaceManagement.table.keys",
-        hidden: true
-    },
-    {
-        name: "description",
-        label: "interfacePlatform.interfaceManagement.form.interfaceDescription",
-        hidden: true
     },
     ...create_update_columns
 ]
@@ -419,6 +427,7 @@ const schema = {
                                 closeOnOutside: true,
                                 body: {
                                     type: "form",
+                                    initApi: api_api_get,
                                     api: api_api_update,
                                     body: baseform
                                 }
@@ -435,7 +444,10 @@ const schema = {
                                 size: "xl",
                                 body: {
                                     type: "form",
-                                    initApi: api_api_config_get,
+                                    initApi: "/api-platform/api-config-management/${code}",
+                                    data: {
+                                        code: "${code}", // Explicitly map the code from row data
+                                    },
                                     api: api_api_config_update,
                                     body: configForm
                                 }

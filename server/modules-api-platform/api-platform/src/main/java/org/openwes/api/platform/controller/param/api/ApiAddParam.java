@@ -1,10 +1,11 @@
 package org.openwes.api.platform.controller.param.api;
 
-import org.openwes.api.platform.api.constants.ApiCallTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import org.openwes.api.platform.api.constants.ApiCallTypeEnum;
+import org.openwes.api.platform.api.constants.ProtocolType;
 
 import java.util.Map;
 
@@ -27,45 +28,11 @@ public class ApiAddParam {
     @Schema(title = "接口类型", requiredMode = Schema.RequiredMode.REQUIRED)
     private ApiCallTypeEnum apiType;
 
-    @Schema(title = "接口地址")
-    private String url;
+    @NotNull
+    private ProtocolType protocol = ProtocolType.HTTP; // Default to HTTP
 
-    @Schema(title = "接口请求方法，如 GET、POST")
-    private String method;
-
-    @Schema(title = "接口请求编码")
-    private String encoding;
-
-    @Schema(title = "回传请求头", description = "仅在回传类请求中生效")
-    private Map<String, String> headers;
-
-    @NotEmpty(message = "接口请求格式不可为空")
-    @Schema(title = "接口请求格式，对应 MediaType 的枚举", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String format;
-
-    @Schema(title = "是否进行接口认证", requiredMode = Schema.RequiredMode.REQUIRED)
-    private boolean auth;
-
-    @Schema(title = "认证服务地址")
-    private String authUrl;
-
-    @Schema(title = "接口认证类型")
-    private String grantType;
-
-    @Schema(title = "认证服务用户名")
-    private String username;
-
-    @Schema(title = "认证服务密码")
-    private String password;
-
-    @Schema(title = "密钥 ID")
-    private String secretId;
-
-    @Schema(title = "密钥")
-    private String secretKey;
-
-    @Schema(title = "认证服务响应的 token 名称")
-    private String tokenName;
+    @NotEmpty(message = "协议配置不能为空")
+    private Map<String, Object> protocolConfig;
 
     @Schema(title = "是否开启")
     private boolean enabled;

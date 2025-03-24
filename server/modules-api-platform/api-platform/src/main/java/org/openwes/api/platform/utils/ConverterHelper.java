@@ -1,11 +1,10 @@
 package org.openwes.api.platform.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.openwes.api.platform.api.constants.ConverterTypeEnum;
 import org.openwes.api.platform.domain.entity.ApiConfigPO;
 import org.openwes.common.utils.utils.JsonUtils;
 import org.openwes.distribute.file.client.FastdfsClient;
-import lombok.extern.slf4j.Slf4j;
-import org.graalvm.polyglot.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -33,7 +32,7 @@ public class ConverterHelper {
             return dataObj;
         }
 
-        if (apiConfigPO.getParamConverterType() == ConverterTypeEnum.JS) {
+        if (apiConfigPO.getParamConverterType() == ConverterTypeEnum.JAVA) {
             return convertParamWithJsConverter(apiConfigPO.getJsParamConverter(), dataObj);
         }
 
@@ -50,20 +49,16 @@ public class ConverterHelper {
             return dataObj;
         }
 
-        if (apiConfigPO.getResponseConverterType() == ConverterTypeEnum.JS) {
+        if (apiConfigPO.getResponseConverterType() == ConverterTypeEnum.JAVA) {
             return convertParamWithJsConverter(apiConfigPO.getJsResponseConverter(), dataObj);
         }
 
         return convertParamWithTemplateConverter(apiConfigPO.getTemplateResponseConverter(), dataObj);
     }
 
-    private static String convertParamWithJsConverter(String jsScript, Object obj) {
-
-        try (Context context = Context.create()) {
-            Object result = JavaScriptUtils.executeJs(context, jsScript, obj);
-            return JsonUtils.obj2String(result);
-        }
-
+    private static String convertParamWithJsConverter(String javaScript, Object obj) {
+        Object result = JavaScriptUtils.executeJava(javaScript, obj);
+        return JsonUtils.obj2String(result);
     }
 
     private static Object convertParamWithTemplateConverter(String templateUrl, Object dataObj) {

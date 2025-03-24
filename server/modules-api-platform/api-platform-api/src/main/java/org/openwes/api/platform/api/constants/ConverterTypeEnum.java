@@ -9,7 +9,7 @@ import lombok.Getter;
 public enum ConverterTypeEnum implements IEnum {
 
     NONE("NONE", "NONE"),
-    JS("JS", "javascript"),
+    JAVA("JAVA", "JAVA"),
     TEMPLATE("TEMPLATE", "template");
 
     private final String value;

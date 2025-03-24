@@ -34,10 +34,12 @@ public class ApiConfigPO extends UpdateUserPO {
 
     @Column(length = 20, columnDefinition = "varchar(20)")
     @Comment("parameter convert type")
+    @Enumerated(EnumType.STRING)
     private ConverterTypeEnum paramConverterType;
 
     @Column(length = 20, columnDefinition = "varchar(20)")
     @Comment("response convert type")
+    @Enumerated(EnumType.STRING)
     private ConverterTypeEnum responseConverterType;
 
     @Column(columnDefinition = "text comment '请求参数转换脚本'")

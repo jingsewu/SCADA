@@ -473,17 +473,6 @@ const menuRouter = [
         component: lazy(() => import("@/pages/wms/dashboard"))
     },
 
-    // Data Platform
-    {
-        path: "/data-platform/ai-analysis",
-        name: (
-            <Translation>
-                {(t) => t("dataPlatform.ai.analysis.title")}
-            </Translation>
-        ),
-        component: lazy(() => import("@/pages/data_platform/index"))
-    },
-
 ]
 
 const router = menuRouter.map((item: RouterItem) => {
