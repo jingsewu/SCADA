@@ -2,7 +2,7 @@ dependencies {
     implementation project(path: ":modules-utils:distribute-lock", configuration: 'default')
     implementation project(path: ":modules-scada:scada-api", configuration: 'default')
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     implementation 'org.springframework:spring-tx'
@@ -18,4 +18,7 @@ dependencies {
 
     implementation 'org.reflections:reflections'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
+
+    runtimeOnly("org.apache.plc4x:plc4j-driver-opcua:0.12.0")
+    implementation("org.apache.plc4x:plc4j-api:0.12.0")
 }

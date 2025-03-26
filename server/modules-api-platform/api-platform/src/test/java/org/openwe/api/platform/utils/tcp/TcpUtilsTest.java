@@ -73,30 +73,12 @@ public class TcpUtilsTest {
         poolMap.clear();
     }
 
-    @Test
-    void testSerializePayload_ByteArray() {
-        byte[] data = "test".getBytes();
-        ByteBuf buf = TcpUtils.serializePayload(data);
-        byte[] result = new byte[buf.readableBytes()];
-        buf.readBytes(result);
-        assertArrayEquals(data, result);
-        buf.release();
-    }
-
-    @Test
-    void testSerializePayload_String() {
-        String data = "test";
-        ByteBuf buf = TcpUtils.serializePayload(data);
-        byte[] result = new byte[buf.readableBytes()];
-        buf.readBytes(result);
-        assertArrayEquals(data.getBytes(), result);
-        buf.release();
-    }
 
     @Test
     void testExecute_SuccessfulResponse() throws Exception {
+        port = 8085;
         Map<String, Object> apiConfig = createTestConfig();
-        String payload = "test";
+        String payload = "CONVEYOR_LOG_REPORT|true";
         byte[] response = (byte[]) TcpUtils.execute(apiConfig, payload);
         assertArrayEquals(payload.getBytes(), response);
     }

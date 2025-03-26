@@ -15,7 +15,7 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://nacos.openwes.com:3306/scada?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
     username: root
-    password: 123
+    password: ${db.password:root}
     hikari:
       minimum-idle: 5
       idle-timeout: 180000

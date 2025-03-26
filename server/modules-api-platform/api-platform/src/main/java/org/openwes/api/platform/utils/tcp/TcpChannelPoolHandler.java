@@ -6,6 +6,7 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.pool.ChannelPoolHandler;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.ssl.SslContext;
@@ -30,6 +31,7 @@ public class TcpChannelPoolHandler implements ChannelPoolHandler {
         // Initialize channel pipeline
         ChannelPipeline pipeline = ch.pipeline();
 
+
         // SSL/TLS
         if (tcpConfig.sslConfig() != null && tcpConfig.sslConfig().enabled()) {
             pipeline.addLast(sslContext.newHandler(ch.alloc()));
@@ -43,6 +45,7 @@ public class TcpChannelPoolHandler implements ChannelPoolHandler {
         ));
 
         // Codecs
+        pipeline.addLast(new LineBasedFrameDecoder(1024));
         pipeline.addLast(new StringDecoder(StandardCharsets.UTF_8));
         pipeline.addLast(new StringEncoder(StandardCharsets.UTF_8));
     }

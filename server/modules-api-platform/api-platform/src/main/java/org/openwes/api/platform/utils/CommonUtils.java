@@ -4,8 +4,8 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONPath;
-import org.openwes.common.utils.exception.code_enum.CommonErrorDescEnum;
 import org.apache.commons.lang3.StringUtils;
+import org.openwes.common.utils.exception.code_enum.CommonErrorDescEnum;
 
 public class CommonUtils {
 
@@ -34,17 +34,34 @@ public class CommonUtils {
      * @return
      */
     public static JSONArray parseBody(String body) {
-        Object obj = JSON.parse(body);
-        if (obj instanceof JSONObject) {
-            JSONArray array = new JSONArray();
-            array.add(obj);
-            return array;
-        } else if (obj instanceof JSONArray jsonArray) {
-            return jsonArray;
+        // Check if the input is likely a JSON object/array or a primitive
+        if (isJSONStructure(body)) {
+            Object parsed = JSON.parse(body);
+            return wrapInArray(parsed); // Handle valid JSON
+        } else {
+            // Treat the input as a raw string
+            return wrapInArray(body);
         }
-        AssertUtils.throwBizException(CommonErrorDescEnum.PARAMETER_ERROR, "Illegal data format");
-        return null;
     }
+
+    private static boolean isJSONStructure(String body) {
+        String trimmed = body.trim();
+        return trimmed.startsWith("{") || trimmed.startsWith("[")
+                || trimmed.startsWith("\"") || "true".equals(trimmed)
+                || "false".equals(trimmed) || "null".equals(trimmed)
+                || isNumeric(trimmed);
+    }
+
+    private static boolean isNumeric(String s) {
+        return s.matches("-?\\d+(\\.\\d+)?([eE][+-]?\\d+)?");
+    }
+
+    private static JSONArray wrapInArray(Object obj) {
+        JSONArray array = new JSONArray();
+        array.add(obj);
+        return array;
+    }
+
 
     /**
      * 根据路径获取json节点内容

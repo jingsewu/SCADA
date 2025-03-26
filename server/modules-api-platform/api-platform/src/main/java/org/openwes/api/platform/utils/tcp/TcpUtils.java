@@ -1,16 +1,13 @@
 package org.openwes.api.platform.utils.tcp;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.pool.FixedChannelPool;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.Future;
+import lombok.extern.slf4j.Slf4j;
 import org.openwes.common.utils.utils.JsonUtils;
 
 import javax.net.ssl.SSLException;
@@ -20,6 +17,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class TcpUtils {
 
     private static final EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
@@ -38,6 +36,12 @@ public class TcpUtils {
     }
 
     public static Object execute(Map<String, Object> apiConfig, Object payload) throws Exception {
+
+        if (payload == null) {
+            log.warn("payload is null");
+            return null;
+        }
+
         TcpConfig tcpConfig = JsonUtils.string2Object(JsonUtils.obj2String(apiConfig), TcpConfig.class);
         assert tcpConfig != null;
         InetSocketAddress address = new InetSocketAddress(tcpConfig.host(), tcpConfig.port());
@@ -51,7 +55,7 @@ public class TcpUtils {
                     }
                 });
 
-        CompletableFuture<Object> responseFuture = new CompletableFuture<>();
+        CompletableFuture<String> responseFuture = new CompletableFuture<>();
 
         pool.acquire().addListener((Future<Channel> future) -> {
             if (!future.isSuccess()) {
@@ -60,32 +64,12 @@ public class TcpUtils {
             }
 
             Channel channel = future.getNow();
-            // Add handler FIRST
-            channel.pipeline().addLast(new SimpleChannelInboundHandler<Object>() { // Accept any type
-                @Override
-                protected void channelRead0(ChannelHandlerContext ctx, Object msg) {
-                    try {
-                        // Handle both ByteBuf and byte[] automatically
-                        byte[] result = deserializeResponse(msg);
-                        responseFuture.complete(result);
-                    } catch (Exception e) {
-                        responseFuture.completeExceptionally(e);
-                    } finally {
-                        pool.release(channel);
-                        ctx.pipeline().remove(this);
-                    }
-                }
-
-                @Override
-                public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-                    responseFuture.completeExceptionally(cause);
-                    pool.release(channel);
-                    ctx.pipeline().remove(this);
-                }
-            });
+            channel.pipeline().addLast(new ClientResponseHandler(responseFuture, pool, channel));
 
             // Write payload AFTER adding handler
-            channel.writeAndFlush(serializePayload(payload)).addListener(writeFuture -> {
+            String message = JsonUtils.obj2String(payload);
+            String formattedMessage = message.endsWith("\n") ? message : message + "\n";
+            channel.writeAndFlush(formattedMessage).addListener(writeFuture -> {
                 if (!writeFuture.isSuccess()) {
                     pool.release(channel);
                     responseFuture.completeExceptionally(writeFuture.cause());
@@ -96,24 +80,4 @@ public class TcpUtils {
         return responseFuture.get(tcpConfig.timeoutMillis(), TimeUnit.MILLISECONDS);
     }
 
-    public static ByteBuf serializePayload(Object payload) {
-        if (payload instanceof byte[]) {
-            return Unpooled.wrappedBuffer((byte[]) payload);
-        }
-        return Unpooled.wrappedBuffer(payload.toString().getBytes());
-    }
-
-
-    private static byte[] deserializeResponse(Object msg) {
-        if (msg instanceof ByteBuf) {
-            ByteBuf buf = (ByteBuf) msg;
-            byte[] bytes = new byte[buf.readableBytes()];
-            buf.readBytes(bytes);
-            buf.release(); // Release Netty buffer
-            return bytes;
-        } else if (msg instanceof byte[]) {
-            return (byte[]) msg;
-        }
-        throw new IllegalArgumentException("Unsupported message type: " + msg.getClass());
-    }
 }
