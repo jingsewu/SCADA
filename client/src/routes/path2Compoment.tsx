@@ -61,14 +61,6 @@ const menuRouter = [
         ),
         component: lazy(() => import("@/pages/user/login_log"))
     },
-    {
-        path: "/user/oauth-client-manage",
-        name: (
-            <Translation>
-                {(t) => t("user.menu.clientAuthorization")}
-            </Translation>
-        )
-    },
 
     // API Platform
     {
@@ -108,370 +100,61 @@ const menuRouter = [
         component: lazy(() => import("@/pages/api_platform/api_keys"))
     },
 
-    // WMS - config center - basic
+    //Scada
     {
-        path: "/wms/config-center",
+        path: "/scada/monitor/alarm-history",
         name: (
             <Translation>
-                {(t) => t("wms.menu.configurationCenter")}
+                {(t) => t("scada.monitor.alarmHistory.title")}
             </Translation>
-        )
-    },
-    {
-        path: "/wms/config-center/basicInfo-config",
-        name: <Translation>{(t) => t("form.tab.basicInformation")}</Translation>
-    },
-    {
-        path: "/wms/config-center/basic/owner-management",
-        name: <Translation>{(t) => t("shipperManagement.title")}</Translation>,
-        component: lazy(
-            () => import("@/pages/wms/config_center/basic/owner_management")
-        )
-    },
-    {
-        path: "/wms/config-center/basic/sku-management",
-        name: <Translation>{(t) => t("SKUManagement.title")}</Translation>,
-        component: lazy(
-            () => import("@/pages/wms/config_center/basic/sku_management")
-        )
-    },
-    {
-        path: "/mdm/config-center/basic/batch-attribute-management",
-        name: <Translation>{(t) => t("batchManagement.title")}</Translation>,
-        component: lazy(
-            () =>
-                import(
-                    "@/pages/wms/config_center/basic/batch_attribute_management"
-                    )
-        )
-    },
-    {
-        path: "/wms/config-center/basic/container-spec-management",
-        name: <Translation>{(t) => t("containerSpec.title")}</Translation>,
-        component: lazy(
-            () =>
-                import(
-                    "@/pages/wms/config_center/basic/container_spec_management"
-                    )
-        )
-    },
-    {
-        path: "/wms/config-center/basic/container-management",
-        name: (
-            <Translation>{(t) => t("containerManagement.title")}</Translation>
         ),
-        component: lazy(
-            () => import("@/pages/wms/config_center/basic/container_management")
-        )
+        component: lazy(() => import("@/pages/scada/monitor/alarm_history"))
     },
     {
-        path: "/wms/config-center/basic/transfer-container-management",
-        name: (
-            <Translation>{(t) => t("transferContainerManagement.title")}</Translation>
-        ),
-        component: lazy(
-            () => import("@/pages/wms/config_center/basic/transfer_container_management")
-        )
-    },
-    {
-        path: "/wms/config-center/basic/put-wall-management",
-        name: (
-            <Translation>{(t) => t("seedingWallManagement.title")}</Translation>
-        ),
-        component: lazy(
-            () => import("@/pages/wms/config_center/basic/put_wall_management")
-        )
-    },
-    {
-        path: "/wms/config-center/basic/work-station",
-        name: (
-            <Translation>{(t) => t("workstationManagement.title")}</Translation>
-        ),
-        component: lazy(
-            () => import("@/pages/wms/config_center/basic/work_station")
-        )
-    },
-
-    // WMS - config center - warehouse
-    {
-        path: "/wms/config-center/warehouse",
+        path: "/scada/monitor/color-config",
         name: (
             <Translation>
-                {(t) => t("wms.menu.warehouseInformation")}
+                {(t) => t("scada.monitor.colorConfig.title")}
             </Translation>
-        )
-    },
-    {
-        path: "/wms/config-center/warehouse/warehouse-management",
-        name: (
-            <Translation>{(t) => t("warehouseManagement.title")}</Translation>
         ),
-        component: lazy(
-            () =>
-                import(
-                    "@/pages/wms/config_center/warehouse/warehouse_management"
-                    )
-        )
+        component: lazy(() => import("@/pages/scada/monitor/color_config"))
     },
     {
-        path: "/wms/config-center/warehouse/warehouse-area-group",
+        path: "/scada/monitor/equipment-monitor",
         name: (
             <Translation>
-                {(t) => t("warehouseAreaManagement.title")}
+                {(t) => t("scada.monitor.equipmentMonitor.title")}
             </Translation>
         ),
-        component: lazy(
-            () =>
-                import(
-                    "@/pages/wms/config_center/warehouse/warehouse_area_group"
-                    )
-        )
+        component: lazy(() => import("@/pages/scada/monitor/equipment_monitor"))
     },
     {
-        path: "/wms/config-center/warehouse/warehouse-area",
+        path: "/scada/monitor/scada-scan-rate",
         name: (
             <Translation>
-                {(t) => t("reservoirAreaManagement.title")}
+                {(t) => t("scada.statics.scadaScanRate.title")}
             </Translation>
         ),
-        component: lazy(
-            () => import("@/pages/wms/config_center/warehouse/warehouse_area")
-        )
+        component: lazy(() => import("@/pages/scada/statics/scada_scan_rate"))
     },
     {
-        path: "/wms/config-center/warehouse/warehouse-logic",
-        name: (
-            <Translation>{(t) => t("logicalAreaManagement.title")}</Translation>
-        ),
-        component: lazy(
-            () => import("@/pages/wms/config_center/warehouse/warehouse_logic")
-        )
-    },
-    {
-        path: "/wms/config-center/warehouse/shelf-management",
-        name: <Translation>{(t) => t("wms.menu.shelfManagement")}</Translation>
-    },
-    {
-        path: "/wms/config-center/warehouse/location-management",
-        name: <Translation>{(t) => t("locationManagement.title")}</Translation>,
-        component: lazy(
-            () =>
-                import(
-                    "@/pages/wms/config_center/warehouse/location_management"
-                    )
-        )
-    },
-
-    // WMS - config center - rule
-    {
-        path: "/wms/rule",
-        name: <Translation>{(t) => t("wms.menu.rulesManagement")}</Translation>
-    },
-    {
-        path: "/wms/config-center/rule/system-config",
+        path: "/scada/monitor/scada-traffic-statistics",
         name: (
             <Translation>
-                {(t) => t("systemConfigManagement.title")}
+                {(t) => t("scada.statics.scadaTrafficStatistics.title")}
             </Translation>
         ),
-        component: lazy(
-            () => import("@/pages/wms/config_center/rule/system_config")
-        )
+        component: lazy(() => import("@/pages/scada/statics/scada_traffic_statistics"))
     },
     {
-        path: "/wms/config-center/rule/dictionary-management",
-        name: (
-            <Translation>{(t) => t("dictionaryManagement.title")}</Translation>
-        ),
-        component: lazy(
-            () => import("@/pages/wms/config_center/rule/dictionary_management")
-        )
-    },
-    {
-        path: "/wms/config-center/rule/number-rule",
-        name: <Translation>{(t) => t("wms.menu.encodingRules")}</Translation>
-    },
-    {
-        path: "/wms/config-center/rule/barcode-parse-rule",
+        path: "/scada/log/scada-log",
         name: (
             <Translation>
-                {(t) => t("barcodeParsingManagement.title")}
+                {(t) => t("scada.log.scadaLog.title")}
             </Translation>
         ),
-        component: lazy(
-            () => import("@/pages/wms/config_center/rule/barcode_parse_rule")
-        )
-    },
-    {
-        path: "/wms/data-center",
-        name: <Translation>{(t) => t("wms.menu.dataCenters")}</Translation>
-    },
-    {
-        path: "/wms/data-center/inbound-manage",
-        name: <Translation>{(t) => t("wms.menu.inboundManage")}</Translation>
-    },
-
-    // WMS - data center - inbound
-    {
-        path: "/wms/data-center/inbound/inbound-plan-order",
-        name: <Translation>{(t) => t("menu.inboundOrder")}</Translation>,
-        component: lazy(
-            () => import("@/pages/wms/data_center/inbound/inbound_plan_order")
-        )
-    },
-    {
-        path: "/wms/data-center/inbound/putaway-task",
-        name: <Translation>{(t) => t("wms.menu.putAwayTasks")}</Translation>,
-        component: lazy(
-            () => import("@/pages/wms/data_center/inbound/put_away_task")
-        )
-    },
-    {
-        path: "/wms/data-center/inbound/empty-container-inbound",
-        name: (
-            <Translation>
-                {(t) => t("wms.menu.emptyContainerInbound")}
-            </Translation>
-        ),
-        component: lazy(
-            () =>
-                import(
-                    "@/pages/wms/data_center/inbound/empty_container_inbound"
-                    )
-        )
-    },
-    {
-        path: "/wms/data-center/receiving-manage",
-        name: (
-            <Translation>{(t) => t("wms.menu.receiptManagement")}</Translation>
-        ),
-        component: lazy(
-            () =>
-                import(
-                    "@/pages/wms/data_center/inbound/accept_order"
-                    )
-        )
-    },
-    {
-        path: "/wms/data-center/outbound-manage",
-        name: <Translation>{(t) => t("wms.menu.outboundManage")}</Translation>
-    },
-
-    // WMS - data center - outbound
-    {
-        path: "/wms/data-center/outbound/outbound-plan-order",
-        name: <Translation>{(t) => t("outboundOrder.title")}</Translation>,
-        component: lazy(
-            () => import("@/pages/wms/data_center/outbound/outbound_plan_order")
-        )
-    },
-    {
-        path: "/wms/data-center/outbound/empty-container-outbound",
-        name: <Translation>{(t) => t("wms.menu.emptyContainerOutbound")}</Translation>,
-        component: lazy(
-            () => import("@/pages/wms/data_center/outbound/empty_container_outbound")
-        )
-    },
-    {
-        path: "/wms/data-center/outbound/picking-order",
-        name: <Translation>{(t) => t("pickingTasks.title")}</Translation>,
-        component: lazy(
-            () => import("@/pages/wms/data_center/outbound/picking_order")
-        )
-    },
-    {
-        path: "/wms/data-center/stock/order-schedule",
-        name: <Translation>{(t) => t("wms.menu.orderDispatch")}</Translation>
-    },
-    {
-        path: "/wms/data-center/stock/stock-manage",
-        name: <Translation>{(t) => t("wms.menu.inventoryManage")}</Translation>
-    },
-
-    // WMS - data center - stock
-    {
-        path: "/wms/data-center/stock/container-stock",
-        name: <Translation>{(t) => t("inventoryDetails.title")}</Translation>,
-        component: lazy(
-            () => import("@/pages/wms/data_center/stock/container_stock")
-        )
-    },
-    {
-        path: "/wms/data-center/stock/stock-abnormal",
-        name: <Translation>{(t) => t("inventorAnomalies.title")}</Translation>,
-        component: lazy(
-            () => import("@/pages/wms/data_center/stock/stock_abnormal")
-        )
-    },
-    {
-        path: "/wms/data-center/stock/stock-adjust",
-        name: (
-            <Translation>
-                {(t) => t("wms.menu.inventoryAdjustment")}
-            </Translation>
-        ),
-        component: lazy(
-            () => import("@/pages/wms/data_center/stock/stock_adjust")
-        )
-    },
-    {
-        path: "/wms/data-center/stock/stocktake",
-        name: <Translation>{(t) => t("wms.menu.inventoryCheck")}</Translation>,
-        component: lazy(() => import("@/pages/wms/data_center/stock/stocktake"))
-    },
-    {
-        path: "/wms/data-center/stock/stock-inventory",
-        name: <Translation>{(t) => t("wms.menu.inventoryTally")}</Translation>
-    },
-    {
-        path: "/wms/data-center/stock/inventory-task",
-        name: <Translation>{(t) => t("wms.menu.tallyTask")}</Translation>
-    },
-    {
-        path: "/wms/data-center/stock/stock-record",
-        name: (
-            <Translation>{(t) => t("wms.menu.inventoryRecords")}</Translation>
-        ),
-        component: lazy(
-            () => import("@/pages/wms/data_center/stock/stock_records")
-        )
-    },
-    {
-        path: "/wms/data-center/stock/batch-attribute-adjust",
-        name: (
-            <Translation>
-                {(t) => t("wms.menu.batchAttributeAdjustment")}
-            </Translation>
-        )
-    },
-    {
-        path: "/wms/data-center/stock/serial-number-stock",
-        name: (
-            <Translation>
-                {(t) => t("wms.menu.serialNumberInventory")}
-            </Translation>
-        )
-    },
-    {
-        path: "/wms/data-center/stock/stock-transfer",
-        name: (
-            <Translation>{(t) => t("wms.menu.inventoryTransfer")}</Translation>
-        )
-    },
-    {
-        path: "/wms/data-center/stock/stock-transfer-task",
-        name: (
-            <Translation>
-                {(t) => t("wms.menu.inventoryTransferTask")}
-            </Translation>
-        )
-    },
-
-    {
-        path: "/wms/dashboard",
-        name: <Translation>{(t) => t("wms.menu.dashboard")}</Translation>,
-        component: lazy(() => import("@/pages/wms/dashboard"))
-    },
+        component: lazy(() => import("@/pages/scada/log/scada_log"))  // Assuming one more file exists
+    }
 
 ]
 
