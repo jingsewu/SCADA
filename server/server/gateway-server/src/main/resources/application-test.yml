@@ -6,31 +6,31 @@ spring:
           max-frame-payload-length: 10240000
       routes:
         - id: scada
-          uri: http://${nacos.openwes.com:localhost}:9010
+          uri: http://${nacos.openwes.com:localhost}:9020
           predicates:
             - Path=/scada/**
           filters:
             - RewritePath=/scada/(?<segment>.*) , /$\{segment}
         - id: user
-          uri: http://${nacos.openwes.com:localhost}:9010
+          uri: http://${nacos.openwes.com:localhost}:9020
           predicates:
             - Path=/user/**
           filters:
             - RewritePath=/user/(?<segment>.*) , /$\{segment}
         - id: mdm
-          uri: http://${nacos.openwes.com:localhost}:9010
+          uri: http://${nacos.openwes.com:localhost}:9020
           predicates:
             - Path=/mdm/**
           filters:
             - RewritePath=/mdm/(?<segment>.*) , /$\{segment}
         - id: search
-          uri: http://${nacos.openwes.com:localhost}:9010
+          uri: http://${nacos.openwes.com:localhost}:9020
           predicates:
             - Path=/search/**
           filters:
             - RewritePath=/search/(?<segment>.*) , /$\{segment}
         - id: api-platform
-          uri: http://${nacos.openwes.com:localhost}:9010
+          uri: http://${nacos.openwes.com:localhost}:9020
           predicates:
             - Path=/api-platform/**
           filters:

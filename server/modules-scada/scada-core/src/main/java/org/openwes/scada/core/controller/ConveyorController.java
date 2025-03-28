@@ -16,6 +16,8 @@ public class ConveyorController {
 
     private final ConveyorModelRepository conveyorModelRepository;
 
+    public static volatile boolean openMock = false;
+
     @PostMapping("create")
     public void save(@RequestBody ConveyorModel conveyorModel) {
         conveyorModelRepository.save(conveyorModel);
@@ -28,6 +30,9 @@ public class ConveyorController {
 
     @GetMapping("findAll")
     public Object findAll() {
+        if (openMock) {
+            return ConveyorMockService.conveyorDatabase.values();
+        }
         return conveyorModelRepository.findAll();
     }
 
@@ -44,6 +49,11 @@ public class ConveyorController {
     @DeleteMapping("{id}")
     public void delete(@PathVariable("id") Long id) {
         conveyorModelRepository.deleteById(id);
+    }
+
+    @GetMapping("openMock")
+    public void openMock() {
+        openMock = true;
     }
 
 }

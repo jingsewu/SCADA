@@ -62,7 +62,7 @@ spring:
         use_sql_comments: true
 
 server:
-  port: 9010
+  port: 9020
   max-http-request-header-size: 1024000
 
 bean-searcher:
