@@ -35,171 +35,175 @@ const baseform = [
         required: true
     },
     {
-        "type": "switch",
-        "name": "enabled",
-        "label": "Enable Configuration",
-        "value": true
+        type: "switch",
+        name: "enabled",
+        label: "interfacePlatform.configuration.enableConfig",
+        value: true
     },
     {
-        "type": "switch",
-        "name": "syncCallback",
-        "label": "synchronize callback",
-        "value": true
+        type: "switch",
+        name: "syncCallback",
+        label: "interfacePlatform.configuration.syncCallback",
+        value: true
     },
     {
-        "type": "select",
-        "name": "protocol",
-        "label": "Protocol Type",
-        "required": true,
-        "options": [
-            {"label": "HTTP", "value": "HTTP"},
-            {"label": "TCP", "value": "TCP"}
+        type: "select",
+        name: "protocol",
+        label: "interfacePlatform.configuration.protocolType",
+        required: true,
+        options: [
+            {label: "HTTP", value: "HTTP"},
+            {label: "TCP", value: "TCP"}
         ],
-        "value": "HTTP"
+        value: "HTTP",
+        visibleOn: "data.apiType === 'CALLBACK'"
     },
     {
-        "type": "tabs",
-        "visibleOn": "data.apiType === 'CALLBACK'",
-        "tabs": [
+        type: "tabs",
+        visibleOn: "data.apiType === 'CALLBACK'",
+        tabs: [
             {
-                "title": "HTTP Configuration",
-                "body": [
+                title: "interfacePlatform.configuration.httpConfig",
+                body: [
                     {
-                        "type": "input-text",
-                        "name": "protocolConfig.url",
-                        "label": "API URL",
-                        "required": true,
-                        "validations": {
-                            "isUrl": true
+                        type: "input-text",
+                        name: "protocolConfig.url",
+                        label: "interfacePlatform.configuration.apiUrl",
+                        required: true,
+                        validations: {
+                            isUrl: true
                         }
                     },
                     {
-                        "type": "select",
-                        "name": "protocolConfig.method",
-                        "label": "HTTP Method",
-                        "value": "GET",
-                        "options": ["GET", "POST", "PUT", "PATCH", "DELETE"]
+                        type: "select",
+                        name: "protocolConfig.method",
+                        label: "interfacePlatform.configuration.httpMethod",
+                        value: "GET",
+                        options: [
+                            "get",
+                            "post"
+                        ]
                     },
                     {
-                        "type": "input-text",
-                        "name": "protocolConfig.encoding",
-                        "label": "Encoding",
-                        "value": "UTF-8"
+                        type: "input-text",
+                        name: "protocolConfig.encoding",
+                        label: "interfacePlatform.configuration.encoding",
+                        value: "UTF-8"
                     },
                     {
-                        "type": "combo",
-                        "name": "protocolConfig.headers",
-                        "label": "Headers",
-                        "multiple": true,
-                        "items": [
+                        type: "combo",
+                        name: "protocolConfig.headers",
+                        label: "interfacePlatform.configuration.headers",
+                        multiple: true,
+                        items: [
                             {
-                                "type": "input-text",
-                                "name": "key",
-                                "placeholder": "Header name"
+                                type: "input-text",
+                                name: "key",
+                                placeholder: "interfacePlatform.configuration.headerName"
                             },
                             {
-                                "type": "input-text",
-                                "name": "value",
-                                "placeholder": "Header value"
+                                type: "input-text",
+                                name: "value",
+                                placeholder: "interfacePlatform.configuration.headerValue"
                             }
                         ]
                     },
                     {
-                        "type": "input-number",
-                        "name": "protocolConfig.timeoutMillis",
-                        "label": "Timeout (ms)",
-                        "min": 1000,
-                        "value": 10000
+                        type: "input-number",
+                        name: "protocolConfig.timeoutMillis",
+                        label: "interfacePlatform.configuration.timeout",
+                        min: 1000,
+                        value: 10000
                     },
                     {
-                        "type": "switch",
-                        "name": "protocolConfig.enableAuth",
-                        "label": "Enable Authentication",
-                        "value": false
+                        type: "switch",
+                        name: "protocolConfig.enableAuth",
+                        label: "interfacePlatform.configuration.enableAuth",
+                        value: false
                     },
                     {
-                        "type": "container",
-                        "visibleOn": "data.protocolConfig.enableAuth",
-                        "body": [
+                        type: "container",
+                        visibleOn: "data.protocolConfig.enableAuth",
+                        body: [
                             {
-                                "type": "input-text",
-                                "name": "protocolConfig.authConfig.authUrl",
-                                "label": "Auth URL",
-                                "required": true
+                                type: "input-text",
+                                name: "protocolConfig.authConfig.authUrl",
+                                label: "interfacePlatform.configuration.authUrl",
+                                required: true
                             },
                             {
-                                "type": "select",
-                                "name": "protocolConfig.authConfig.grantType",
-                                "label": "Grant Type",
-                                "options": [
-                                    {"label": "Client Credentials", "value": "client_credentials"},
-                                    {"label": "Password", "value": "password"}
+                                type: "select",
+                                name: "protocolConfig.authConfig.grantType",
+                                label: "interfacePlatform.configuration.grantType",
+                                options: [
+                                    {label: "interfacePlatform.auth.clientCredentials", value: "client_credentials"},
+                                    {label: "interfacePlatform.auth.password", value: "password"}
                                 ]
                             }
                         ]
                     }
                 ],
-                "visibleOn": "data.protocol === 'HTTP'"
+                visibleOn: "data.protocol === 'HTTP'"
             },
             {
-                "title": "TCP Configuration",
-                "body": [
+                title: "interfacePlatform.configuration.tcpConfig",
+                body: [
                     {
-                        "type": "input-text",
-                        "name": "protocolConfig.host",
-                        "label": "Host",
-                        "required": true
+                        type: "input-text",
+                        name: "protocolConfig.host",
+                        label: "interfacePlatform.configuration.host",
+                        required: true
                     },
                     {
-                        "type": "input-number",
-                        "name": "protocolConfig.port",
-                        "label": "Port",
-                        "required": true,
-                        "min": 1,
-                        "max": 65535
+                        type: "input-number",
+                        name: "protocolConfig.port",
+                        label: "interfacePlatform.configuration.port",
+                        required: true,
+                        min: 1,
+                        max: 65535
                     },
                     {
-                        "type": "input-text",
-                        "name": "protocolConfig.delimiter",
-                        "label": "Message Delimiter",
-                        "value": "\\n"
+                        type: "input-text",
+                        name: "protocolConfig.delimiter",
+                        label: "interfacePlatform.configuration.messageDelimiter",
+                        value: "\\n"
                     },
                     {
-                        "type": "input-number",
-                        "name": "protocolConfig.maxConnections",
-                        "label": "Max Connections",
-                        "min": 1,
-                        "value": 10
+                        type: "input-number",
+                        name: "protocolConfig.maxConnections",
+                        label: "interfacePlatform.configuration.maxConnections",
+                        min: 1,
+                        value: 10
                     },
                     {
-                        "type": "switch",
-                        "name": "protocolConfig.ssl.enabled",
-                        "label": "Enable SSL",
-                        "value": false
+                        type: "switch",
+                        name: "protocolConfig.ssl.enabled",
+                        label: "interfacePlatform.configuration.enableSSL",
+                        value: false
                     },
                     {
-                        "type": "container",
-                        "visibleOn": "data.protocolConfig.ssl.enabled",
-                        "body": [
+                        type: "container",
+                        visibleOn: "data.protocolConfig.ssl.enabled",
+                        body: [
                             {
-                                "type": "input-text",
-                                "name": "protocolConfig.ssl.protocol",
-                                "label": "SSL Protocol"
+                                type: "input-text",
+                                name: "protocolConfig.ssl.protocol",
+                                label: "interfacePlatform.configuration.sslProtocol"
                             },
                             {
-                                "type": "input-text",
-                                "name": "protocolConfig.ssl.truststorePath",
-                                "label": "Truststore Path"
+                                type: "input-text",
+                                name: "protocolConfig.ssl.truststorePath",
+                                label: "interfacePlatform.configuration.truststorePath"
                             },
                             {
-                                "type": "input-text",
-                                "name": "protocolConfig.ssl.keystorePath",
-                                "label": "Keystore Path"
+                                type: "input-text",
+                                name: "protocolConfig.ssl.keystorePath",
+                                label: "interfacePlatform.configuration.keystorePath"
                             }
                         ]
                     }
                 ],
-                "visibleOn": "data.protocol === 'TCP'"
+                visibleOn: "data.protocol === 'TCP'"
             }
         ]
     }

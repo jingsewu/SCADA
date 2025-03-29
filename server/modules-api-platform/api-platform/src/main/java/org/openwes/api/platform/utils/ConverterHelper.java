@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-
 @Slf4j
 @Lazy
 @Component
@@ -62,8 +60,7 @@ public class ConverterHelper {
     }
 
     private static Object convertParamWithTemplateConverter(String templateUrl, Object dataObj) {
-        byte[] templateFile = fastdfsClient.download(templateUrl);
-        return FreeMarkerHelper.convertByTemplate(templateFile, dataObj, (Map<String, Object>) null);
+        return null;
     }
 
     /**

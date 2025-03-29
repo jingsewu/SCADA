@@ -109,9 +109,6 @@
     <logger name="org.hibernate.engine.QueryParameters" level="WARN"/>
     <logger name="org.springframework.jdbc.core.JdbcTemplate" level="WARN"/>
     <logger name="org.springframework.jdbc.core.StatementCreatorUtils" level="WARN"/>
-    <logger name="com.alibaba.cloud.dubbo" level="WARN"/>
-    <logger name="org.apache.dubbo" level="WARN"/>
-    <logger name="com.alibaba.nacos.client" level="WARN"/>
 
     <!--log4jdbc 日志配置-->
     <logger name="jdbc.sqlonly" level="ERROR"/>

@@ -1,11 +1,9 @@
 package org.openwes.api.platform.application.service.handler;
 
-import com.alibaba.fastjson2.JSONArray;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.openwes.api.platform.application.context.RequestHandleContext;
 import org.openwes.api.platform.application.service.RequestHandlerService;
-import org.openwes.api.platform.utils.CommonUtils;
 import org.openwes.api.platform.utils.ConverterHelper;
 import org.openwes.common.utils.utils.JsonUtils;
 import org.openwes.common.utils.utils.ValidatorUtils;
@@ -22,13 +20,13 @@ public abstract class RequestHandler implements RequestHandlerService {
 
     @Override
     public void convertParam(RequestHandleContext context) {
-        JSONArray jsonArray = CommonUtils.parseBody(context.getBody());
+        List<Object> jsonArray = JsonUtils.string2List(context.getBody(), Object.class);
         assert jsonArray != null;
         List<Object> targetList = new ArrayList<>(jsonArray.size());
         jsonArray.forEach(obj -> {
             Object targetObj = ConverterHelper.convertParam(context.getApiConfig(), obj);
-            if (targetObj instanceof JSONArray arrayObject) {
-                targetList.addAll(arrayObject);
+            if (targetObj instanceof List collection) {
+                targetList.addAll(collection);
             } else {
                 targetList.add(targetObj);
             }

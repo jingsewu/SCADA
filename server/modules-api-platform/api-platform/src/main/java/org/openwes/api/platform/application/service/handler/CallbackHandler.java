@@ -1,6 +1,5 @@
 package org.openwes.api.platform.application.service.handler;
 
-import com.alibaba.fastjson2.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.openwes.api.platform.api.exception.error_code.ApiPlatformErrorCodeEnum;
 import org.openwes.api.platform.application.context.CallbackHandleContext;
@@ -50,7 +49,7 @@ public abstract class CallbackHandler implements CallbackHandlerService {
         if (convertResponse == null) {
             response = Response.builder().code(ApiPlatformErrorCodeEnum.API_TEMPLATE_PARSE_ERROR.getCode()).build();
         } else {
-            response = JSONObject.parseObject(JsonUtils.obj2String(convertResponse), Response.class);
+            response = JsonUtils.string2Object(JsonUtils.obj2String(convertResponse), Response.class);
         }
         context.setResponse(response);
     }

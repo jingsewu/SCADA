@@ -82,7 +82,7 @@ const Header = ({
                             color: "#fff"
                         }}
                     />
-                    <span className="text-xl font-bold pl-3">OPEN-WES</span>
+                    <span className="text-xl font-bold pl-3">SCADA</span>
                 </div>
             </div>
             <div className={`cxd-Layout-headerBar pt-2`}>

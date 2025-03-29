@@ -12,7 +12,6 @@ dependencies {
     compileOnly 'org.hibernate.orm:hibernate-core'
     compileOnly 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.redisson:redisson-spring-boot-starter'
-    compileOnly 'org.apache.dubbo:dubbo-spring-boot-starter'
     compileOnly 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 

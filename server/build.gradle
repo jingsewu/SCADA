@@ -89,8 +89,6 @@ subprojects {
             dependency group: 'org.springframework.security.oauth.boot', name: 'spring-security-oauth2-autoconfigure', version: '2.6.8'
             dependency group: 'org.springframework.security', name: 'spring-security-jwt', version: '1.1.1.RELEASE'
 
-            dependency group: 'org.apache.dubbo', name: 'dubbo-spring-boot-starter', version: '3.2.10'
-
             dependency group: 'org.springframework.cloud', name: 'spring-cloud-starter-stream-kafka', version: '4.0.1'
             dependency group: 'com.alibaba.cloud', name: 'spring-cloud-starter-alibaba-nacos-config', version: '2023.0.1.0'
             dependency group: 'com.alibaba.cloud', name: 'spring-cloud-starter-alibaba-nacos-discovery', version: '2023.0.1.0'

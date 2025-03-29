@@ -4,7 +4,6 @@ import com.alibaba.ttl.TtlRunnable;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.dubbo.config.annotation.DubboService;
 import org.openwes.api.platform.api.ICallbackApi;
 import org.openwes.api.platform.api.constants.CallbackApiTypeEnum;
 import org.openwes.api.platform.api.dto.callback.CallbackMessage;
@@ -23,7 +22,6 @@ import java.util.concurrent.Executor;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@DubboService
 public class CallbackApiImpl implements ICallbackApi {
 
     private final HandlerExecutor handlerExecutor;

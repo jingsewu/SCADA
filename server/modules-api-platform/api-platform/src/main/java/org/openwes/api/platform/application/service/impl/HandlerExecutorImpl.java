@@ -1,6 +1,5 @@
 package org.openwes.api.platform.application.service.impl;
 
-import com.alibaba.fastjson2.JSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openwes.api.platform.api.dto.callback.CallbackMessage;
@@ -20,6 +19,7 @@ import org.openwes.api.platform.utils.AssertUtils;
 import org.openwes.api.platform.utils.ConverterHelper;
 import org.openwes.api.platform.utils.ResponseUtils;
 import org.openwes.common.utils.http.Response;
+import org.openwes.common.utils.utils.JsonUtils;
 import org.springframework.stereotype.Service;
 
 import static org.openwes.api.platform.api.exception.error_code.ApiPlatformErrorCodeEnum.API_API_IS_NOT_ENABLE;
@@ -102,7 +102,7 @@ public class HandlerExecutorImpl implements HandlerExecutor {
             return handleContext.getResponse();
         } catch (Exception e) {
             log.error("handler callback error.callbackType: {},sourceData: {}", apiPO.getCode(),
-                    JSON.toJSONString(sourceData), e);
+                    JsonUtils.obj2String(sourceData), e);
             return ResponseUtils.buildResponse(e);
         }
     }
