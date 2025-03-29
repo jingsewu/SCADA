@@ -11,7 +11,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(
-        name = "m_color_config"
+        name = "m_color_config",
+        indexes = {
+                @Index(unique = true, name = "uk_device_type_status", columnList = "deviceType,deviceStatus")
+        }
 )
 public class ColorConfigPO extends UpdateUserPO {
 
@@ -25,6 +28,7 @@ public class ColorConfigPO extends UpdateUserPO {
     @Column(nullable = false)
     private String rgb;
 
+    @Column(nullable = false)
     private int deviceStatus;
 
     private String description;
