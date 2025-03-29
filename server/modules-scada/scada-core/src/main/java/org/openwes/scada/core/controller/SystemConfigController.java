@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("config/system/config")
 @Validated
 @RequiredArgsConstructor
-@Tag(name = "Wms Module Api")
+@Tag(name = "SCADA Module Api")
 public class SystemConfigController {
 
     private final ISystemConfigApi systemConfigApi;

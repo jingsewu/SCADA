@@ -1,17 +1,15 @@
 package org.openwes.scada.core.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.openwes.scada.core.domain.entity.ColorConfig;
 import org.openwes.scada.core.domain.repository.ColorConfigRepository;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/color-config")
+@RestController
+@RequestMapping("color-config")
 @RequiredArgsConstructor
+@Tag(name = "SCADA Module Api")
 public class ColorConfigController {
 
     private final ColorConfigRepository colorConfigRepository;

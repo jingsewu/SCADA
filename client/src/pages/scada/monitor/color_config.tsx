@@ -9,7 +9,7 @@ const formBody = [
     },
     {
         label: "设备状态",
-        type: "input",
+        type: "input-number",
         name: "deviceStatus",
         required: true
     },
@@ -29,10 +29,7 @@ const formBody = [
         type: "input-text",
         name: "rgb",
         required: true,
-        placeholder: "格式: rgb(255,255,255)",
-        validations: {
-            matchRegexp: "/^rgb\$\\d{1,3},\\d{1,3},\\d{1,3}\$$/"
-        }
+        placeholder: "格式: rgb(255,255,255)"
     },
     {
         label: "描述",
@@ -56,9 +53,8 @@ const crudColumns = [
     },
     {
         label: "设备状态",
-        type: "input",
         name: "deviceStatus",
-        required: true
+        searchable: true
     },
     {
         name: "deviceType",
@@ -107,6 +103,10 @@ const schema = {
                 searchObject: {
                     orderBy: "update_time desc"
                 }
+            },
+            autoGenerateFilter: {
+                columnsNum: 3,
+                showBtnToolbar: true
             },
             columns: [...crudColumns,
                 {

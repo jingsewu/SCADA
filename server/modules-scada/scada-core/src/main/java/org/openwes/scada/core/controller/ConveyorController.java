@@ -1,5 +1,6 @@
 package org.openwes.scada.core.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openwes.scada.core.domain.entity.ConveyorModel;
@@ -8,10 +9,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/scada/conveyor")
+@RequestMapping("conveyor")
 @Slf4j
 @RequiredArgsConstructor
 @Validated
+@Tag(name = "SCADA Module Api")
 public class ConveyorController {
 
     private final ConveyorModelRepository conveyorModelRepository;
@@ -23,7 +25,7 @@ public class ConveyorController {
         conveyorModelRepository.save(conveyorModel);
     }
 
-    @PutMapping("update")
+    @PostMapping("update")
     public void update(@RequestBody ConveyorModel conveyorModel) {
         conveyorModelRepository.save(conveyorModel);
     }

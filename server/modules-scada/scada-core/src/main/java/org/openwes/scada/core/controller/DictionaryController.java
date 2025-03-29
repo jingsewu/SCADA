@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("config/dictionary")
 @RequiredArgsConstructor
-@Tag(name = "Wms Module Api")
+@Tag(name = "SCADA Module Api")
 public class DictionaryController {
 
     private final IDictionaryApi dictionaryApi;
