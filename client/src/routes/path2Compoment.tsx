@@ -1,5 +1,5 @@
-import React, {lazy} from "react"
-import {Translation} from "react-i18next"
+import React, { lazy } from "react"
+import { Translation } from "react-i18next"
 
 interface RouterItem {
     [param: string]: any
@@ -14,7 +14,8 @@ const meta = {
 const baseRouter = [
     {
         path: "/",
-        component: lazy(() => import("@/pages/Login"))
+        // component: lazy(() => import("@/pages/Login"))
+        component: lazy(() => import("@/pages/scada/monitor/alarm_history"))
     },
     {
         path: "/login",
@@ -126,7 +127,10 @@ const menuRouter = [
                 {(t) => t("scada.monitor.equipmentMonitor.title")}
             </Translation>
         ),
-        component: lazy(() => import("@/pages/scada/monitor/equipment_monitor"))
+        // component: lazy(() => import("@/pages/scada/monitor/equipment_monitor"))
+        component: lazy(
+            () => import("@/pages/scada/monitor/ConnectedRectangles")
+        )
     },
     {
         path: "/scada/monitor/scada-scan-rate",
@@ -144,27 +148,24 @@ const menuRouter = [
                 {(t) => t("scada.statics.scadaTrafficStatistics.title")}
             </Translation>
         ),
-        component: lazy(() => import("@/pages/scada/statics/scada_traffic_statistics"))
+        component: lazy(
+            () => import("@/pages/scada/statics/scada_traffic_statistics")
+        )
     },
     {
         path: "/scada/log/scada-log",
-        name: (
-            <Translation>
-                {(t) => t("scada.log.scadaLog.title")}
-            </Translation>
-        ),
-        component: lazy(() => import("@/pages/scada/log/scada_log"))  // Assuming one more file exists
+        name: <Translation>{(t) => t("scada.log.scadaLog.title")}</Translation>,
+        component: lazy(() => import("@/pages/scada/log/scada_log")) // Assuming one more file exists
     }
-
 ]
 
 const router = menuRouter.map((item: RouterItem) => {
     return item.meta
         ? item
         : {
-            ...item,
-            meta
-        }
+              ...item,
+              meta
+          }
 })
 
 const path2components = [...baseRouter, ...router]
