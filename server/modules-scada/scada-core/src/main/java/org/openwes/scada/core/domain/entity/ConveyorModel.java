@@ -24,6 +24,8 @@ public class ConveyorModel {
     @Data
     public static class ConveyorNode {
         private String nodeCode;
+        private int angle;
+        private boolean inflectionPoint;
         private String nextNodeCodes;
 
         private String containerCode;

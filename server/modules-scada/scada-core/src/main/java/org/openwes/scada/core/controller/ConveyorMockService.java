@@ -50,6 +50,18 @@ public class ConveyorMockService {
             node.setAddress("DB" + i + ",W" + (j * 10)); // Mock PLC address
             node.setHasBox(false);
             nodes.add(node);
+
+            if (j <= 4) {
+                node.setAngle(90);
+            } else if (j <= 16) {
+                node.setAngle(0);
+            } else {
+                node.setAngle(270);
+            }
+
+            if (j == 4 || j == 16) {
+                node.setInflectionPoint(true);
+            }
         }
         return nodes;
     }
@@ -98,7 +110,7 @@ public class ConveyorMockService {
             }
 
             // Randomly add new boxes at the start (10% chance)
-            if (random.nextInt(5) == 0 && !nodes.isEmpty() && !nodes.get(0).isHasBox()) {
+            if (random.nextInt(100) == 0 && !nodes.isEmpty() && !nodes.get(0).isHasBox()) {
                 nodes.get(0).setHasBox(true);
                 nodes.get(0).setContainerCode("CONT-" + System.currentTimeMillis());
             }
