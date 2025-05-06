@@ -127,7 +127,17 @@ const menuRouter = [
                 {(t) => t("scada.monitor.equipmentMonitor.title")}
             </Translation>
         ),
-        // component: lazy(() => import("@/pages/scada/monitor/equipment_monitor"))
+        component: lazy(
+            () => import("@/pages/scada/monitor/equipment_monitor")
+        )
+    },
+    {
+        path: "/scada/monitor/equipment-scada",
+        name: (
+            <Translation>
+                {(t) => t("scada.monitor.equipmentMonitor.title")}
+            </Translation>
+        ),
         component: lazy(
             () => import("@/pages/scada/monitor/ConnectedRectangles")
         )

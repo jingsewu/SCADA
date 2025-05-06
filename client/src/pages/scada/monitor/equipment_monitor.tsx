@@ -1,6 +1,6 @@
 import schema2component from "@/utils/schema2component";
 import {api_crud_search} from "@/pages/constantApi";
-import {scada_color_config_create, scada_color_config_delete} from "@/pages/scada/constants/api_constant";
+import {device_monitor_create, device_monitor_delete} from "@/pages/scada/constants/api_constant";
 
 const formBody = [
     {
@@ -8,9 +8,18 @@ const formBody = [
         name: "id"
     },
     {
-        label: "设备状态",
-        type: "input",
-        name: "deviceStatus",
+        label: "设备IP",
+        type: "input-text",
+        name: "deviceIp",
+        required: true,
+        validations: {
+            isIpAddress: true
+        }
+    },
+    {
+        label: "设备名称",
+        type: "input-text",
+        name: "deviceName",
         required: true
     },
     {
@@ -19,32 +28,31 @@ const formBody = [
         name: "deviceType",
         required: true,
         options: [
-            "分拣机",
-            "扫描设备",
-            "输送线"
+            "PLC",
+            "HMI",
+            "RTU",
+            "Sensor",
+            "Gateway"
         ]
     },
     {
-        label: "RGB颜色",
-        type: "input-text",
-        name: "rgb",
-        required: true,
-        placeholder: "格式: rgb(255,255,255)",
-        validations: {
-            matchRegexp: "/^rgb\$\\d{1,3},\\d{1,3},\\d{1,3}\$$/"
-        }
-    },
-    {
-        label: "描述",
+        label: "备注",
         type: "textarea",
-        name: "description"
+        name: "remark"
     },
     {
-        label: "图例显示",
+        label: "在线状态",
         type: "switch",
-        name: "legendVisible",
+        name: "online",
         trueValue: true,
         falseValue: false
+    },
+    {
+        label: "最后心跳时间",
+        type: "datetime",
+        name: "lastPingTime",
+        format: "YYYY-MM-DD HH:mm:ss",
+        inputFormat: "YYYY-MM-DD HH:mm:ss"
     }
 ];
 
@@ -55,10 +63,14 @@ const crudColumns = [
         hidden: true
     },
     {
-        label: "设备状态",
-        type: "input",
-        name: "deviceStatus",
-        required: true
+        name: "deviceIp",
+        label: "设备IP",
+        searchable: true
+    },
+    {
+        name: "deviceName",
+        label: "设备名称",
+        searchable: true
     },
     {
         name: "deviceType",
@@ -66,40 +78,52 @@ const crudColumns = [
         searchable: {
             type: "select",
             options: [
-                "分拣机",
-                "扫描设备",
-                "输送线"
+                "PLC",
+                "HMI",
+                "RTU",
+                "Sensor",
+                "Gateway"
             ]
         }
     },
     {
-        name: "rgb",
-        label: "RGB颜色"
-    },
-    {
-        name: "description",
-        label: "描述"
-    },
-    {
-        name: "legendVisible",
-        label: "图例显示",
+        name: "online",
+        label: "在线状态",
         type: "mapping",
         map: {
-            true: "显示",
-            false: "隐藏"
+            true: {
+                text: "在线",
+                type: "success"
+            },
+            false: {
+                text: "离线",
+                type: "danger"
+            }
         }
+    },
+    {
+        name: "lastPingTime",
+        label: "最后心跳",
+        type: "datetime",
+        format: "YYYY-MM-DD HH:mm:ss"
+    },
+    {
+        name: "remark",
+        label: "备注",
+        type: "text"
     }
 ];
-const searchIdentity = "MColorConfig"
+
+const searchIdentity = "MDeviceMonitor"
 
 const schema = {
     type: "page",
-    title: "颜色配置管理",
+    title: "设备监控管理",
     body: [
         {
             type: "crud",
             syncLocation: false,
-            name: "ColorConfigTable",
+            name: "DeviceMonitorTable",
             api: api_crud_search,
             defaultParams: {
                 searchIdentity: searchIdentity,
@@ -111,33 +135,33 @@ const schema = {
             columns: [...crudColumns,
                 {
                     type: "operation",
-                    label: "table.operation",
+                    label: "操作",
                     width: 230,
                     buttons: [
                         {
-                            label: "button.modify",
+                            label: "修改",
                             type: "button",
                             actionType: "drawer",
                             drawer: {
-                                title: "button.modify",
+                                title: "修改设备信息",
                                 closeOnEsc: true,
                                 closeOnOutside: true,
                                 body: {
                                     type: "form",
-                                    api: scada_color_config_create,
+                                    api: device_monitor_create,
                                     body: formBody
                                 }
                             }
                         },
                         {
-                            label: "button.delete",
+                            label: "删除",
                             type: "button",
                             actionType: "ajax",
                             level: "danger",
-                            confirmText: "toast.sureDelete",
-                            confirmTitle: "button.delete",
-                            api: scada_color_config_delete,
-                            reload: "ColorConfigTable"
+                            confirmText: "确定要删除该设备吗？",
+                            confirmTitle: "删除确认",
+                            api: device_monitor_delete,
+                            reload: "DeviceMonitorTable"
                         }
                     ],
                     toggled: true
@@ -145,13 +169,13 @@ const schema = {
             headerToolbar: [
                 {
                     type: "button",
-                    label: "新增",
+                    label: "新增设备",
                     actionType: "drawer",
                     drawer: {
-                        title: "新增配置",
+                        title: "新增设备",
                         body: {
                             type: "form",
-                            api: scada_color_config_create,
+                            api: device_monitor_create,
                             body: formBody
                         }
                     }

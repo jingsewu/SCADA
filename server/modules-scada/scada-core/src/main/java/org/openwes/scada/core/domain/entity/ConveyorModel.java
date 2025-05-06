@@ -26,13 +26,21 @@ public class ConveyorModel {
         private String nodeCode;
         private int angle;
         private boolean inflectionPoint;
-        private String nextNodeCodes;
 
         private String containerCode;
         private boolean hasBox;
 
         //for plc read
         private String address;
+
+        private int x;
+        private int y;
+        private int z;
+
+        private int length = 30;
+        private int width = 20;
+
+        private String nextNodeCodes;
 
         @JsonIgnore
         public List<String> getNextNodeCodeList() {
