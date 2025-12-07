@@ -129,7 +129,6 @@ export default class Admin extends React.Component<AdminProps, State> {
                 },
                 url: "/user/api/currentUser/getAuth"
             }).then((res: any) => {
-                debugger
                 let menus = res.data.menus
                 localStorage.setItem("permissions", res.data.permissions)
                 let applications: string[] = Object.keys(menus)

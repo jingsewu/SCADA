@@ -28,7 +28,7 @@ const ConnectedRectangles: React.FC = () => {
 
     const getWebsocketData = () => {
         if ("WebSocket" in window) {
-            let ws = new WebSocket("ws://106.75.78.251:9020/scada/ws")
+            let ws = new WebSocket("ws://117.50.245.4:9020/scada/ws")
             ws.onopen = function () {
                 console.log("WebSocket连接成功")
             }
