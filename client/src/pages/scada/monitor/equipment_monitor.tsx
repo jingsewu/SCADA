@@ -88,18 +88,7 @@ const crudColumns = [
     },
     {
         name: "online",
-        label: "在线状态",
-        type: "mapping",
-        map: {
-            true: {
-                text: "在线",
-                type: "success"
-            },
-            false: {
-                text: "离线",
-                type: "danger"
-            }
-        }
+        label: "在线状态"
     },
     {
         name: "lastPingTime",

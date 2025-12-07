@@ -25,7 +25,7 @@ public class ConveyorMockService {
     @PostConstruct
     public void initializeMockConveyors() {
         // Create 3 mock conveyors
-        int conveyorCount = new Random().nextInt(1, 4);
+        int conveyorCount = 1;
         for (long i = 1; i <= conveyorCount; i++) {
             ConveyorModel conveyor = new ConveyorModel();
             conveyor.setId(i);
@@ -33,7 +33,7 @@ public class ConveyorMockService {
             conveyor.setConveyorCode("CONV-" + i);
 
             // Create nodes in a linear path
-            int nodeCount = 20;
+            int nodeCount = 100;
             List<ConveyorModel.ConveyorNode> nodes = getConveyorNodes(nodeCount, i);
             conveyor.setNodes(nodes);
 
@@ -51,15 +51,15 @@ public class ConveyorMockService {
             node.setHasBox(false);
             nodes.add(node);
 
-            if (j <= 4) {
+            if (j <= 20) {
                 node.setAngle(90);
-            } else if (j <= 16) {
+            } else if (j <= 60) {
                 node.setAngle(0);
             } else {
                 node.setAngle(270);
             }
 
-            if (j == 4 || j == 16) {
+            if (j == 40 || j == 160) {
                 node.setInflectionPoint(true);
             }
         }
@@ -110,7 +110,7 @@ public class ConveyorMockService {
             }
 
             // Randomly add new boxes at the start (10% chance)
-            if (random.nextInt(100) == 0 && !nodes.isEmpty() && !nodes.get(0).isHasBox()) {
+            if (random.nextInt(50) == 0 && !nodes.isEmpty() && !nodes.get(0).isHasBox()) {
                 nodes.get(0).setHasBox(true);
                 nodes.get(0).setContainerCode("CONT-" + System.currentTimeMillis());
             }

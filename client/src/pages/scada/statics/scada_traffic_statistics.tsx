@@ -1,164 +1,93 @@
 import schema2component from "@/utils/schema2component";
-import {api_crud_search} from "@/pages/constantApi";
-import {scada_color_config_create, scada_color_config_delete} from "@/pages/scada/constants/api_constant";
+import { api_crud_search } from "@/pages/constantApi";
 
-const formBody = [
-    {
-        type: "hidden",
-        name: "id"
-    },
-    {
-        label: "设备状态",
-        type: "input",
-        name: "deviceStatus",
-        required: true
-    },
-    {
-        label: "设备类型",
-        type: "select",
-        name: "deviceType",
-        required: true,
-        options: [
-            "分拣机",
-            "扫描设备",
-            "输送线"
-        ]
-    },
-    {
-        label: "RGB颜色",
-        type: "input-text",
-        name: "rgb",
-        required: true,
-        placeholder: "格式: rgb(255,255,255)",
-        validations: {
-            matchRegexp: "/^rgb\$\\d{1,3},\\d{1,3},\\d{1,3}\$$/"
-        }
-    },
-    {
-        label: "描述",
-        type: "textarea",
-        name: "description"
-    },
-    {
-        label: "图例显示",
-        type: "switch",
-        name: "legendVisible",
-        trueValue: true,
-        falseValue: false
-    }
-];
-
+// CRUD 表格列配置
 const crudColumns = [
     {
-        name: "id",
-        label: "ID",
-        hidden: true
-    },
-    {
-        label: "设备状态",
-        type: "input",
-        name: "deviceStatus",
-        required: true
-    },
-    {
-        name: "deviceType",
-        label: "设备类型",
+        name: "dvcNo",
+        label: "dvc编号",
         searchable: {
-            type: "select",
-            options: [
-                "分拣机",
-                "扫描设备",
-                "输送线"
-            ]
+            type: "input-text",
+            placeholder: "请输入dvc编号"
         }
     },
     {
-        name: "rgb",
-        label: "RGB颜色"
-    },
-    {
-        name: "description",
-        label: "描述"
-    },
-    {
-        name: "legendVisible",
-        label: "图例显示",
-        type: "mapping",
-        map: {
-            true: "显示",
-            false: "隐藏"
+        name: "scannerNo",
+        label: "扫码器编号",
+        searchable: {
+            type: "input-text",
+            placeholder: "请输入扫码器编号"
         }
+    },
+    {
+        name: "flowTotal",
+        label: "流量总计",
+        sortable: true
+    },
+    {
+        type: "operation",
+        label: "操作",
+        buttons: [
+            {
+                type: "button",
+                label: "查看",
+                actionType: "dialog",
+                dialog: {
+                    title: "详情",
+                    body: [
+                        {
+                            type: "tpl",
+                            tpl: "这里显示详细信息"
+                        }
+                    ]
+                }
+            }
+        ]
     }
 ];
-const searchIdentity = "MColorConfig"
+
+const searchIdentity = "ScanRateLog"; // 请根据实际情况修改
 
 const schema = {
     type: "page",
-    title: "颜色配置管理",
+    title: "扫码率统计",
     body: [
         {
             type: "crud",
             syncLocation: false,
-            name: "ColorConfigTable",
-            api: api_crud_search,
-            defaultParams: {
-                searchIdentity: searchIdentity,
-                showColumns: crudColumns,
-                searchObject: {
-                    orderBy: "update_time desc"
-                }
+            api: {
+                ...api_crud_search,
+                adapt: (payload: any) => ({
+                    ...payload,
+                    searchIdentity: searchIdentity
+                })
             },
-            columns: [...crudColumns,
-                {
-                    type: "operation",
-                    label: "table.operation",
-                    width: 230,
-                    buttons: [
-                        {
-                            label: "button.modify",
-                            type: "button",
-                            actionType: "drawer",
-                            drawer: {
-                                title: "button.modify",
-                                closeOnEsc: true,
-                                closeOnOutside: true,
-                                body: {
-                                    type: "form",
-                                    api: scada_color_config_create,
-                                    body: formBody
-                                }
-                            }
-                        },
-                        {
-                            label: "button.delete",
-                            type: "button",
-                            actionType: "ajax",
-                            level: "danger",
-                            confirmText: "toast.sureDelete",
-                            confirmTitle: "button.delete",
-                            api: scada_color_config_delete,
-                            reload: "ColorConfigTable"
-                        }
-                    ],
-                    toggled: true
-                }],
+            columns: crudColumns,
+            columnsTogglable: false,
             headerToolbar: [
                 {
-                    type: "button",
-                    label: "新增",
-                    actionType: "drawer",
-                    drawer: {
-                        title: "新增配置",
-                        body: {
-                            type: "form",
-                            api: scada_color_config_create,
-                            body: formBody
-                        }
-                    }
+                    type: "export-excel"
                 },
-                "export-excel",
-                "reload"
-            ]
+                {
+                    type: "reload"
+                }
+            ],
+            footerToolbar: [
+                "statistics",
+                {
+                    type: "pagination",
+                    layout: "total, perPage, pager, goPage",
+                    perPage: 10,
+                    perPageAvailable: [10, 20, 50, 100],
+                    showPageInput: true
+                }
+            ],
+            // 添加自动生成的筛选器
+            autoGenerateFilter: {
+                columnsNum: 3,
+                showBtnToolbar: true
+            },
+            features: ["create", "filter", "view", "update", "delete", "bulkDelete"]
         }
     ]
 };
