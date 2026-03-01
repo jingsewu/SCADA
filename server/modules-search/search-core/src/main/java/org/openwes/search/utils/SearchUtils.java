@@ -75,6 +75,9 @@ public class SearchUtils {
         CtClass dynamicClass = classPool.makeClass(PACKAGE_NAME + searchParam.getSearchIdentity());
 
         for (SearchParam.Column column : searchParam.getShowColumns()) {
+            if (column == null || column.getName() == null) {
+                continue;
+            }
             CtField field = new CtField(classPool.get(column.getJavaType()), column.getName(), dynamicClass);
             dynamicClass.addField(field);
 
@@ -99,7 +102,7 @@ public class SearchUtils {
             if (StringUtils.isNotEmpty(searchObject.getTables())) {
                 annotation.addMemberValue("tables", new StringMemberValue(searchObject.getTables(), dynamicClass.getClassFile().getConstPool()));
             }
-                if (StringUtils.isNotEmpty(searchObject.getWhere())) {
+            if (StringUtils.isNotEmpty(searchObject.getWhere())) {
                 annotation.addMemberValue("where", new StringMemberValue(searchObject.getWhere(), dynamicClass.getClassFile().getConstPool()));
             }
             if (StringUtils.isNotEmpty(searchObject.getGroupBy())) {

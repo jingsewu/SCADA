@@ -1,103 +1,6 @@
 import schema2component from "@/utils/schema2component";
 import { api_crud_search } from "@/pages/constantApi";
 
-
-// 表单配置（新增/修改时使用）
-const formBody = [
-    {
-        type: "hidden",
-        name: "id"
-    },
-    {
-        label: "日志类型",
-        type: "select",
-        name: "logType",
-        required: true,
-        options: [
-            "收到货物上报",
-            "货物到达上报",
-            "目的地回复",
-            "目的地请求"
-            // 可根据实际日志类型扩展
-        ],
-        clearable: true
-    },
-    {
-        label: "业务类型",
-        type: "select",
-        name: "bizType",
-        options: [
-            "出库",
-            "分拣"
-        ],
-        clearable: true
-    },
-    {
-        label: "数据流向",
-        type: "select",
-        name: "dataFlow",
-        options: [
-            "WCS-PLC",
-            "PLC→WCS",
-            "WCS→PLC",
-            "PLC1-WCS",
-            "PLC1-PLC",
-            "PLC2-WCS",
-            "PLC2-PLC"
-        ],
-        clearable: true
-    },
-    {
-        label: "条码",
-        type: "input-text",
-        name: "barcode",
-        placeholder: "请输入条码"
-    },
-    {
-        label: "实际地址",
-        type: "input-text",
-        name: "actualAddress"
-    },
-    {
-        label: "BCR编号",
-        type: "input-text",
-        name: "bcrNo",
-        placeholder: "请输入BCR编号"
-    },
-    {
-        label: "分拣结果",
-        type: "select",
-        name: "sortResult",
-        options: [], // 可动态获取或静态定义
-        clearable: true
-    },
-    {
-        label: "包裹号",
-        type: "input-text",
-        name: "packageNo"
-    },
-    {
-        label: "设备编号",
-        type: "input-text",
-        name: "deviceNo"
-    },
-    {
-        label: "高度",
-        type: "input-number",
-        name: "height"
-    },
-    {
-        label: "DVC编号",
-        type: "input-text",
-        name: "dvcNo"
-    },
-    {
-        label: "状态",
-        type: "input-text",
-        name: "status"
-    }
-];
-
 // CRUD 表格列配置
 const crudColumns = [
     {
@@ -106,11 +9,11 @@ const crudColumns = [
         hidden: true
     },
     {
-        name: "logType",
+        name: "field1",
         label: "日志类型",
         searchable: {
             type: "select",
-            name: "logType",
+            name: "field1",
             clearable: true,
             options: [
                 "收到货物上报",
@@ -123,7 +26,7 @@ const crudColumns = [
         }
     },
     {
-        name: "bizType",
+        name: "field2",
         label: "业务类型",
         searchable: {
             type: "select",
@@ -132,11 +35,11 @@ const crudColumns = [
         }
     },
     {
-        name: "dataFlow",
+        name: "field3",
         label: "数据流向"
     },
     {
-        name: "barcode",
+        name: "field4",
         label: "条码",
         searchable: {
             type: "input-text",
@@ -144,11 +47,11 @@ const crudColumns = [
         }
     },
     {
-        name: "actualAddress",
+        name: "field5",
         label: "实际地址"
     },
     {
-        name: "bcrNo",
+        name: "field6",
         label: "BCR编号",
         searchable: {
             type: "input-text",
@@ -156,7 +59,7 @@ const crudColumns = [
         }
     },
     {
-        name: "sortResult",
+        name: "field11",
         label: "分拣结果",
         searchable: {
             type: "select",
@@ -165,23 +68,23 @@ const crudColumns = [
         }
     },
     {
-        name: "packageNo",
+        name: "field7",
         label: "包裹号"
     },
     {
-        name: "deviceNo",
+        name: "field8",
         label: "设备编号"
     },
     {
-        name: "height",
+        name: "field9",
         label: "高度"
     },
     {
-        name: "dvcNo",
+        name: "field10",
         label: "DVC编号"
     },
     {
-        name: "status",
+        name: "field12",
         label: "状态"
     }
 ];

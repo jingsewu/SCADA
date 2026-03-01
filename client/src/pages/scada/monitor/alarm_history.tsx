@@ -83,11 +83,14 @@ const schema = {
             type: "crud",
             syncLocation: false,
             api: {
-                ...api_crud_search,
-                adapt: (payload:any) => ({
-                    ...payload,
-                    searchIdentity: searchIdentity
-                })
+                ...api_crud_search
+            },
+            defaultParams: {
+                searchIdentity: searchIdentity,
+                showColumns: crudColumns,
+                searchObject: {
+                    orderBy: "alarm_time desc"
+                }
             },
             // 搜索表单配置
             filter: {
@@ -127,74 +130,74 @@ const schema = {
             columns: crudColumns,
             // 顶部工具栏按钮
             headerToolbar: [
-                {
-                    type: "button",
-                    label: "新增",
-                    level: "success",
-                    icon: "fa fa-plus",
-                    actionType: "dialog",
-                    dialog: {
-                        title: "新增报警信息",
-                        body: {
-                            type: "form",
-                            api: {
-                                method: "post",
-                                url: "/api/device-alarm/add", // 请替换为实际新增接口
-                                data: {
-                                    searchIdentity
-                                }
-                            },
-                            body: formBody
-                        }
-                    }
-                },
-                {
-                    type: "button",
-                    label: "修改",
-                    level: "info",
-                    icon: "fa fa-edit",
-                    actionType: "dialog",
-                    disabledOn: "!this.items.length", // 有选中项时才启用
-                    dialog: {
-                        title: "修改报警信息",
-                        body: {
-                            type: "form",
-                            initApi: {
-                                method: "get",
-                                url: "/api/device-alarm/get/${id}" // 请替换为实际查询接口
-                            },
-                            api: {
-                                method: "post",
-                                url: "/api/device-alarm/update", // 请替换为实际修改接口
-                                data: {
-                                    searchIdentity
-                                }
-                            },
-                            body: formBody
-                        }
-                    }
-                },
-                {
-                    type: "button",
-                    label: "删除",
-                    level: "danger",
-                    icon: "fa fa-trash",
-                    actionType: "ajax",
-                    confirmText: "确定要删除选中的记录吗？",
-                    api: {
-                        method: "post",
-                        url: "/api/device-alarm/delete", // 请替换为实际删除接口
-                        data: {
-                            ids: "${ARRAYJOIN(ids, ',')}",
-                            searchIdentity
-                        }
-                    }
-                },
-                {
-                    type: "export-excel",
-                    label: "导出",
-                    api: "/api/device-alarm/export" // 请替换为实际导出接口
-                },
+                // {
+                //     type: "button",
+                //     label: "新增",
+                //     level: "success",
+                //     icon: "fa fa-plus",
+                //     actionType: "dialog",
+                //     dialog: {
+                //         title: "新增报警信息",
+                //         body: {
+                //             type: "form",
+                //             api: {
+                //                 method: "post",
+                //                 url: "/api/device-alarm/add", // 请替换为实际新增接口
+                //                 data: {
+                //                     searchIdentity
+                //                 }
+                //             },
+                //             body: formBody
+                //         }
+                //     }
+                // },
+                // {
+                //     type: "button",
+                //     label: "修改",
+                //     level: "info",
+                //     icon: "fa fa-edit",
+                //     actionType: "dialog",
+                //     disabledOn: "!this.items.length", // 有选中项时才启用
+                //     dialog: {
+                //         title: "修改报警信息",
+                //         body: {
+                //             type: "form",
+                //             initApi: {
+                //                 method: "get",
+                //                 url: "/api/device-alarm/get/${id}" // 请替换为实际查询接口
+                //             },
+                //             api: {
+                //                 method: "post",
+                //                 url: "/api/device-alarm/update", // 请替换为实际修改接口
+                //                 data: {
+                //                     searchIdentity
+                //                 }
+                //             },
+                //             body: formBody
+                //         }
+                //     }
+                // },
+                // {
+                //     type: "button",
+                //     label: "删除",
+                //     level: "danger",
+                //     icon: "fa fa-trash",
+                //     actionType: "ajax",
+                //     confirmText: "确定要删除选中的记录吗？",
+                //     api: {
+                //         method: "post",
+                //         url: "/api/device-alarm/delete", // 请替换为实际删除接口
+                //         data: {
+                //             ids: "${ARRAYJOIN(ids, ',')}",
+                //             searchIdentity
+                //         }
+                //     }
+                // },
+                // {
+                //     type: "export-excel",
+                //     label: "导出",
+                //     api: "/api/device-alarm/export" // 请替换为实际导出接口
+                // },
                 "reload"
             ],
             // 底部工具栏配置

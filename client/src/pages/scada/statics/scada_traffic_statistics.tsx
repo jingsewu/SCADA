@@ -56,11 +56,11 @@ const schema = {
             type: "crud",
             syncLocation: false,
             api: {
-                ...api_crud_search,
-                adapt: (payload: any) => ({
-                    ...payload,
-                    searchIdentity: searchIdentity
-                })
+                ...api_crud_search
+            },
+            defaultParams: {
+                searchIdentity: searchIdentity,
+                showColumns: crudColumns
             },
             columns: crudColumns,
             columnsTogglable: false,

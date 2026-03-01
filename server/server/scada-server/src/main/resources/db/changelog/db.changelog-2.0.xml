@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Create device_alarm table -->
+    <changeSet id="create-device-alarm-table" author="Kinser">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="device_alarm"/>
+            </not>
+        </preConditions>
+        <createTable tableName="device_alarm" remarks="设备报警信息表">
+            <column name="id" type="BIGINT" autoIncrement="true" remarks="Primary key ID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="device_no" type="VARCHAR(100)" remarks="设备编号">
+                <constraints nullable="false"/>
+            </column>
+            <column name="alarm_info" type="TEXT" remarks="报警信息"/>
+            <column name="solution" type="TEXT" remarks="建议解决方案"/>
+            <column name="alarm_time" type="DATETIME" remarks="报警时间"/>
+            <column name="created_at" type="DATETIME" defaultValueComputed="CURRENT_TIMESTAMP" remarks="创建时间"/>
+            <column name="updated_at" type="DATETIME" defaultValueComputed="CURRENT_TIMESTAMP" remarks="更新时间"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Create scan_rate_log table -->
+    <changeSet id="create-scan-rate-log-table" author="Kinser">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="scan_rate_log"/>
+            </not>
+        </preConditions>
+        <createTable tableName="scan_rate_log" remarks="扫码速率日志表">
+            <column name="id" type="BIGINT" autoIncrement="true" remarks="Primary key ID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="dvc_no" type="VARCHAR(100)" remarks="dvc编号">
+                <constraints nullable="false"/>
+            </column>
+            <column name="scanner_no" type="VARCHAR(100)" remarks="扫码器编号">
+                <constraints nullable="false"/>
+            </column>
+            <column name="flow_total" type="INT" defaultValueNumeric="0" remarks="流量总计"/>
+            <column name="created_at" type="DATETIME" defaultValueComputed="CURRENT_TIMESTAMP" remarks="创建时间"/>
+            <column name="updated_at" type="DATETIME" defaultValueComputed="CURRENT_TIMESTAMP" remarks="更新时间"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
