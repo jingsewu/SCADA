@@ -11,11 +11,7 @@ const RenderAside = ({ navigations, iframeShow, iframeMenuClick }: any) => {
         if (location.pathname?.includes(WorkStation)) {
             return link?.includes(WorkStation)
         }
-        const ret = matchPath(location.pathname, {
-            path: link ? link.replace(/\?.*$/, "") : "",
-            exact: true,
-            strict: true
-        })
+        const ret = matchPath(link ? link.replace(/\?.*$/, "") : "", location.pathname)
         return !!ret
     }
 

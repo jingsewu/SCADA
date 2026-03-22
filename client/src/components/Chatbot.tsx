@@ -104,13 +104,14 @@ const Chatbot = () => {
                                 }}
                             />
                         ) : (
-                            <ReactMarkdown
-                                className="markdown-container"
-                                remarkPlugins={[remarkBreaks]}
-                                rehypePlugins={[]} // Add any necessary rehype plugins here
-                            >
-                                {message.text}
-                            </ReactMarkdown>
+                            <div className="markdown-container">
+                                <ReactMarkdown
+                                    remarkPlugins={[remarkBreaks]}
+                                    rehypePlugins={[]}
+                                >
+                                    {message.text}
+                                </ReactMarkdown>
+                            </div>
                         )}
                     </div>
                 ))}

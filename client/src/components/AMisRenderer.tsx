@@ -3,7 +3,7 @@ import { render as renderSchema, replaceText } from "amis"
 import { IMainStore } from "@/stores"
 import { getEnv } from "mobx-state-tree"
 import { inject, observer } from "mobx-react"
-import { withRouter, RouteComponentProps } from "react-router"
+import { useNavigate, useLocation } from "react-router-dom"
 import * as qs from "qs"
 import { Action } from "amis/lib/types"
 import * as cn from "../locales/zh-cn.json"
@@ -14,25 +14,38 @@ interface RendererProps {
     [propName: string]: any
 }
 
-const lang = {
+type Locale = "zh-CN" | "en-US"
+
+const lang: Record<Locale, any> = {
     "zh-CN": cn,
     "en-US": en
 }
 
-@inject("store")
-// @ts-ignore
-@withRouter
+
+interface AMisRendererInnerProps extends RendererProps {
+    store?: IMainStore
+    navigate: ReturnType<typeof useNavigate>
+    location: ReturnType<typeof useLocation>
+}
+
 @observer
-export default class AMisRenderer extends React.Component<RendererProps, any> {
+class AMisRendererInner extends React.Component<AMisRendererInnerProps, any> {
     env: any = null
 
     handleAction = (e: any, action: Action) => {
         this.env.alert(`没有识别的动作：${JSON.stringify(action)}`)
     }
 
-    constructor(props: RendererProps) {
+    constructor(props: AMisRendererInnerProps) {
         super(props)
-        const store = props.store as IMainStore
+        const store = props.store
+        const navigate = props.navigate
+        const location = props.location
+
+        if (!store) {
+            throw new Error("Store is required")
+        }
+
         const fetcher = getEnv(store).fetcher
         const notify = getEnv(store).notify
         const alert = getEnv(store).alert
@@ -40,14 +53,9 @@ export default class AMisRenderer extends React.Component<RendererProps, any> {
         const copy = getEnv(store).copy
         const apiHost = getEnv(store).apiHost
         const getModalContainer = getEnv(store).getModalContainer
-        const history = props.history
 
         const normalizeLink = (to: string) => {
-            if (/^\/api\//.test(to)) {
-                return to
-            }
             to = to || ""
-            const location = history.location
             if (to && to[0] === "#") {
                 to = location.pathname + location.search + to
             } else if (to && to[0] === "?") {
@@ -58,8 +66,8 @@ export default class AMisRenderer extends React.Component<RendererProps, any> {
             let pathname = ~idx
                 ? to.substring(0, idx)
                 : ~idx2
-                ? to.substring(0, idx2)
-                : to
+                    ? to.substring(0, idx2)
+                    : to
             let search = ~idx ? to.substring(idx, ~idx2 ? idx2 : undefined) : ""
             let hash = ~idx2 ? to.substring(idx2) : ""
             if (!pathname) {
@@ -80,22 +88,18 @@ export default class AMisRenderer extends React.Component<RendererProps, any> {
             return pathname + search + hash
         }
 
-        // todo，这个过程可以 cache
         this.env = {
             session: "global",
             updateLocation:
                 props.updateLocation ||
                 ((location: string, replace: boolean) => {
                     if (location === "goBack") {
-                        return history.goBack()
+                        return navigate(-1)
                     }
-                    history[replace ? "replace" : "push"](
-                        normalizeLink(location)
-                    )
+                    navigate(normalizeLink(location), { replace })
                 }),
             isCurrentUrl: (to: string) => {
                 const link = normalizeLink(to)
-                const location = history.location
                 let pathname = link
                 let search = ""
                 const idx = link.indexOf("?")
@@ -121,7 +125,7 @@ export default class AMisRenderer extends React.Component<RendererProps, any> {
                 props.jumpTo ||
                 ((to: string, action?: any) => {
                     if (to === "goBack") {
-                        return history.goBack()
+                        return navigate(-1)
                     }
                     to = normalizeLink(to)
                     if (action && action.actionType === "url") {
@@ -133,7 +137,7 @@ export default class AMisRenderer extends React.Component<RendererProps, any> {
                     if (/^https?:\/\//.test(to)) {
                         window.location.replace(to)
                     } else {
-                        history.push(to)
+                        navigate(to)
                     }
                 }),
             fetcher,
@@ -147,17 +151,25 @@ export default class AMisRenderer extends React.Component<RendererProps, any> {
     }
 
     render() {
-        const { schema, store, onAction, ...rest } = this.props
+        const { schema, store, onAction, navigate, location, ...rest } = this.props
         return renderSchema(
             schema,
             {
-                // onAction: onAction || this.handleAction,
                 onAction: onAction,
                 theme: store && store.theme,
                 locale: store && store.locale,
                 ...rest
             },
-            { ...this.env, replaceText: lang[store.locale] }
-        )
+            { ...this.env, replaceText: lang[store!.locale as Locale] }        )
     }
 }
+
+function withRouter(Component: React.ComponentType<AMisRendererInnerProps>) {
+    return function WithRouter(props: Omit<AMisRendererInnerProps, 'navigate' | 'location'>) {
+        const navigate = useNavigate()
+        const location = useLocation()
+        return <Component {...props} navigate={navigate} location={location} />
+    }
+}
+
+export default withRouter(inject("store")(AMisRendererInner))

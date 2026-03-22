@@ -52,9 +52,15 @@ module.exports = {
                 use: ["file-loader"]
             },
             {
-                test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-                use: [{ loader: "@svgr/webpack", options: { icon: true } }]
-            }
+                test: /\.svg$/,
+                issuer: /\.[jt]sx?$/,
+                use: ['@svgr/webpack'],
+            },
+            {
+                test: /\.svg$/,
+                issuer: /\.css$/,
+                type: 'asset/resource',
+            },
         ]
     },
     resolve: {

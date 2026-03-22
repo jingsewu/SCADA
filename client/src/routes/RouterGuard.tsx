@@ -1,81 +1,45 @@
 import * as React from "react"
-import { Route } from "react-router-dom"
+import { useLocation, Navigate } from "react-router-dom"
 import path2components from "@/routes/path2Compoment"
 import KeepAlive from "react-activation"
 import { NotFound, Spinner } from "amis"
 import { handleRouteData } from "@/pages/components/TabsLayout"
 
-export default class RouterGuard extends React.Component<any, any> {
-    componentDidMount() {
-        this.refreshRoute()
-    }
+interface RouterGuardProps {
+    location?: ReturnType<typeof useLocation>
+}
 
-    state = {
-        pathname: "",
-        component: Spinner,
-        routeWhen: false
-    }
+export default function RouterGuard() {
+    const location = useLocation();
+    const pathname = location.pathname;
 
-    componentDidUpdate(
-        prevProps: Readonly<any>,
-        prevState: Readonly<any>,
-        snapshot?: any
-    ) {
-        this.refreshRoute()
-        this.getRouteWhen()
-    }
-
-    refreshRoute = () => {
-        const pathname = this.props.location.pathname
-        if (this.state.pathname != pathname) {
-            this.setState({ pathname: pathname })
-            let path2ComponentItem = path2components.find((v) => {
-                let path = v.path
-                if (path != null && !path.startsWith("/")) {
-                    path = "/" + path
-                }
-                return path === pathname
-            })
-
-            if (
-                path2ComponentItem != null &&
-                path2ComponentItem.component != null
-            ) {
-                this.setState({
-                    component: path2ComponentItem.component
-                })
-            } else {
-                this.setState({ component: NotFound })
-            }
+    // 查找匹配的组件
+    const path2ComponentItem = path2components.find((v) => {
+        let path = v.path;
+        if (path != null && !path.startsWith("/")) {
+            path = "/" + path;
         }
-    }
+        return path === pathname;
+    });
 
-    getRouteWhen = () => {
-        const { allowedData } = handleRouteData(path2components)
-        const allowed = allowedData.find(
-            (item) => item.path == this.props.location.pathname && item.cache
-        )
-        this.state.routeWhen = !!allowed
-    }
+    const Component = path2ComponentItem?.component || NotFound;
 
-    render() {
-        return (
-            <React.Suspense fallback={<p>loading</p>}>
-                <Route
-                    path={this.state.pathname}
-                    exact
-                    render={() => (
-                        <KeepAlive
-                            id={this.state.pathname}
-                            name={this.state.pathname}
-                            when={this.state.routeWhen}
-                        >
-                            {React.createElement(this.state.component)}
-                        </KeepAlive>
-                    )}
-                    // render={() => React.createElement(this.state.component)}
-                ></Route>
-            </React.Suspense>
-        )
-    }
+    // 检查是否需要缓存
+    const { allowedData } = handleRouteData(path2components);
+    const allowed = allowedData.find(
+        (item) => item.path === pathname && item.cache
+    );
+    const shouldCache = !!allowed;
+
+    return (
+        <React.Suspense fallback={<div>loading</div>}>
+            <KeepAlive
+                id={pathname}
+                name={pathname}
+                when={shouldCache}
+            >
+                <Component />
+            </KeepAlive>
+        </React.Suspense>
+    );
 }

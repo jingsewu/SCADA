@@ -1,25 +1,21 @@
 import * as React from "react"
-import {RouteComponentProps} from "react-router-dom"
 import {IMainStore} from "@/stores"
 import {inject, observer} from "mobx-react"
-import {withRouter} from "react-router"
 import "@/scss/style.scss"
 import LoginForm from "./components/LoginForm"
 import {withTranslation} from "react-i18next"
 import Language from "./components/Language"
 
-interface LoginProps extends RouteComponentProps<any> {
+interface LoginProps {
     store: IMainStore
     t: any
 }
 
-@inject("store")
-// @ts-ignore
-@withRouter
 @observer
 class LoginRoute extends React.Component<LoginProps, any> {
     render() {
         const {t} = this.props
+        const LoginFormComponent = LoginForm as any
         return (
             <div className="login-page-container d-flex justify-center">
                 <div className="w-1/2">
@@ -27,7 +23,7 @@ class LoginRoute extends React.Component<LoginProps, any> {
                         className="relative h-full d-flex flex-col justify-center items-center"
                     >
                         <div className="flex-1 d-flex flex-col justify-center max-w-6xl">
-                            <LoginForm/>
+                            <LoginFormComponent/>
                         </div>
                     </div>
                 </div>
@@ -60,4 +56,4 @@ class LoginRoute extends React.Component<LoginProps, any> {
     }
 }
 
-export default withTranslation()(LoginRoute)
+export default withTranslation()(inject("store")(LoginRoute))

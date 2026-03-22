@@ -1,9 +1,9 @@
-import React, { useState } from "react"
-import { Translation } from "react-i18next"
-import { useHistory } from "react-router"
-import { Button, Dropdown, Menu, Space, Select } from "antd"
-import { DownOutlined } from "@ant-design/icons"
-import type { MenuProps } from "antd"
+import React, {useState} from "react"
+import {Translation} from "react-i18next"
+import {useNavigate} from "react-router-dom"
+import {Button, Dropdown, Menu, Space, Select} from "antd"
+import {DownOutlined} from "@ant-design/icons"
+import type {MenuProps} from "antd"
 import Icon from "@ant-design/icons"
 
 import store from "@/stores"
@@ -36,17 +36,17 @@ interface HeaderProps {
 }
 
 const Header = ({
-    selectedApp,
-    applications,
-    onApplicationChange,
-    onLanguageChange
-}: HeaderProps) => {
-    const history = useHistory()
+                    selectedApp,
+                    applications,
+                    onApplicationChange,
+                    onLanguageChange
+                }: HeaderProps) => {
+    const navigate = useNavigate()
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
     const logout = () => {
         store.user.logout()
-        history.replace(`/login`)
+        navigate(`/login`, {replace: true})
     }
 
     const handleMenuClick: MenuProps["onClick"] = (e) => {
@@ -69,14 +69,14 @@ const Header = ({
                     onClick={store.toggleOffScreen}
                     className="pull-right visible-xs"
                 >
-                    <i className="fa fa-bars text-white" />
+                    <i className="fa fa-bars text-white"/>
                 </button>
                 <div
                     className={`cxd-Layout-brand d-flex juftify-center items-center shadow`}
-                    style={{ height: 50 }}
+                    style={{height: 50}}
                 >
                     <Icon
-                        component={() => <LogoSvg />}
+                        component={() => <LogoSvg/>}
                         style={{
                             fontSize: "32px",
                             color: "#fff"
@@ -117,7 +117,7 @@ const Header = ({
                 </div>
 
                 <div className="m-l-auto hidden-xs pull-right">
-                    <Language onLanguageChange={onLanguageChange} />
+                    <Language onLanguageChange={onLanguageChange}/>
                     <Dropdown
                         menu={{
                             items,
@@ -128,7 +128,7 @@ const Header = ({
                         <Button type="primary" shape="round">
                             <Space>
                                 {store.user.name}
-                                <DownOutlined />
+                                <DownOutlined/>
                             </Space>
                         </Button>
                     </Dropdown>

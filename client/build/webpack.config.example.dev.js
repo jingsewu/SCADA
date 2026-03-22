@@ -91,7 +91,7 @@ webpackConfig = {
         historyApiFallback: true,
         open: true,
         // compress: false,
-        proxy: {
+        proxy: [{
             "/gw": {
                 target: "http://localhost:8090",
                 changeOrigin: true,
@@ -101,7 +101,7 @@ webpackConfig = {
                     "^/gw": ""
                 }
             }
-        }
+        }]
     },
     plugins: [
         new CleanWebpackPlugin(),

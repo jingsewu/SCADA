@@ -1,14 +1,14 @@
-
-
-import "core-js/es6/object.js"
-import "core-js/es6/array.js"
-
-import "core-js/es6/symbol.js";
-import "core-js/es6/set.js";
-import "core-js/es6/map.js";
-
-
 import 'promise/polyfill';
+
+// 新代码（core-js v3）
+import 'core-js/actual/object';
+import 'core-js/actual/array';
+import 'core-js/actual/symbol';
+import 'core-js/actual/set';
+import 'core-js/actual/map';
+
+// 或者直接引入完整的 polyfill（不推荐，体积大）
+import 'core-js/actual';
 
 
 if (!Element.prototype.matches) {
