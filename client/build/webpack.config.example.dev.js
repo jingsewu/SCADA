@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin")
 const { CleanWebpackPlugin } = require("clean-webpack-plugin")
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 const ReactRefreshTypeScript = require("react-refresh-typescript").default;
+const webpack = require("webpack")
 
 webpackConfig = {
     mode: "development",
