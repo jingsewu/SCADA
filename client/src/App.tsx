@@ -12,7 +12,7 @@ import "bootstrap/dist/css/bootstrap.css"
 import "amis/lib/themes/cxd.css"
 import "amis/lib/helper.css"
 import "amis/sdk/iconfont.css"
-import "antd/dist/antd.css"
+import "antd/dist/reset.css"
 
 export default function (): JSX.Element {
     return (

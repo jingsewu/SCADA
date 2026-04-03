@@ -7,7 +7,7 @@ import type { Navigations } from "@/pages/index"
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string
 
 type Iprops = {
-    history: any
+    navigate: any
     location: { pathname: string }
     store: any
     selectedApp: string
@@ -85,7 +85,7 @@ const handleIframeData = (routes: any, locale: any) => {
 
 const TabsLayout = (props: Iprops) => {
     const {
-        history,
+        navigate,
         location,
         store,
         selectedApp,
@@ -199,10 +199,7 @@ const TabsLayout = (props: Iprops) => {
         if (currentTabList.length > 0) {
             setTabList(currentTabList)
             setActiveKey(currentTabList[0]?.key || "")
-            history.replace({
-                pathname: currentTabList[0]?.path,
-                query: currentTabList[0]?.query
-            })
+            navigate(currentTabList[0]?.path, { replace: true })
         } else {
             const defaultPath = navigations[0]?.children?.[0]?.path
             const currentTab = getAllowed(defaultPath as string) as TabList
@@ -213,10 +210,7 @@ const TabsLayout = (props: Iprops) => {
                 }
             ])
             setActiveKey(currentTab?.key)
-            history.replace({
-                pathname: currentTab?.path,
-                query: currentTab?.query
-            })
+            navigate(currentTab?.path, { replace: true })
         }
     }
 
@@ -225,9 +219,7 @@ const TabsLayout = (props: Iprops) => {
         if (currentTabList.length > 0) {
             tabListLocalChange(currentTabList)
             setActiveKey(currentTabList[0]?.key || "")
-            history.replace({
-                pathname: currentTabList[0]?.key
-            })
+            navigate(currentTabList[0]?.key, { replace: true })
         } else {
             const languageValueMappings =
                 navigations[0].children[0].languageValueMappings
@@ -241,9 +233,7 @@ const TabsLayout = (props: Iprops) => {
                 }
             ])
             setActiveKey(navigations[0].children[0].permissions || "")
-            history.replace({
-                pathname: navigations[0].children[0].permissions
-            })
+            navigate(navigations[0].children[0].permissions, { replace: true })
         }
     }
 
@@ -252,16 +242,11 @@ const TabsLayout = (props: Iprops) => {
         const tab = getTab(newActiveKey) as TabList
         setActiveKey(newActiveKey)
         if (iframeShow) {
-            history.replace({
-                pathname: tab.key
-            })
+            navigate(tab.key, { replace: true })
             onIframeTabChange(tab.path)
             return
         }
-        history.replace({
-            pathname: tab.path,
-            query: tab.query
-        })
+        navigate(tab.path, { replace: true })
     }
 
     const remove = (targetKey: string) => {

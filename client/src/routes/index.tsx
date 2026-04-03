@@ -1,6 +1,6 @@
 import * as React from "react"
 import { ToastComponent, AlertComponent } from "amis"
-import { Route, Switch, Redirect, BrowserRouter } from "react-router-dom"
+import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom"
 import { observer } from "mobx-react"
 import { IMainStore } from "@/stores"
 import Login from "../pages/Login"
@@ -19,10 +19,10 @@ export default observer(function ({ store }: { store: IMainStore }) {
                     theme={store.theme}
                 />
                 <AlertComponent key="alert" theme={store.theme} />
-                <Switch>
-                    <Route path={`/login`} component={Login} />
-                    <Route path={""} component={Index} />
-                </Switch>
+                <Routes>
+                    <Route path="/login" element={<Login store={store} />} />
+                    <Route path="/*" element={<Index store={store} />} />
+                </Routes>
             </div>
         </BrowserRouter>
     )

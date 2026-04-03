@@ -1,5 +1,5 @@
 import * as React from "react"
-import {Redirect, RouteComponentProps, Switch} from "react-router-dom"
+import {Navigate, Routes, Route, useNavigate, useLocation} from "react-router-dom"
 import {Layout, toast} from "amis"
 import {IMainStore} from "@/stores"
 import {inject, observer} from "mobx-react"
@@ -44,13 +44,15 @@ export interface State {
     isModalOpen: boolean
 }
 
-export interface AdminProps extends RouteComponentProps<any> {
+export interface AdminProps {
     store: IMainStore
+    navigate?: any
+    location?: any
 }
 
 @inject("store")
 @observer
-export default class Admin extends React.Component<AdminProps, State> {
+class Admin extends React.Component<AdminProps, State> {
     state: State = {
         menus: Object,
         selectedApp: "",
@@ -94,16 +96,16 @@ export default class Admin extends React.Component<AdminProps, State> {
     logout = () => {
         const store = this.props.store
         store.user.logout()
-        const history = this.props.history
-        history.replace(`/login`)
+        const navigate = this.props.navigate
+        navigate(`/login`, { replace: true })
     }
 
     componentDidMount() {
         const store = this.props.store
-        const history = this.props.history
+        const navigate = this.props.navigate
         if (!store.user.isAuthenticated) {
             toast["error"]("用户未登陆，请先登陆！", "消息")
-            history.replace(`/login`)
+            navigate(`/login`, { replace: true })
         }
         this.refreshMenu()
         this.getAllDictionaryData()
@@ -173,10 +175,8 @@ export default class Admin extends React.Component<AdminProps, State> {
             ...this.state,
             iframeUrl: path
         })
-        const history = this.props.history
-        history.replace({
-            pathname: permissions
-        })
+        const navigate = this.props.navigate
+        navigate(permissions, { replace: true })
     }
 
     onIframeTabChange = (path: string) => {
@@ -213,10 +213,9 @@ export default class Admin extends React.Component<AdminProps, State> {
         let pathname = this.props.location.pathname
         if (pathname == "login" || pathname == "/") {
             return (
-                <Switch>
-                    <RouterGuard/>
-                    <Redirect to={`/404`}/>
-                </Switch>
+                <Routes>
+                    <Route path="*" element={<RouterGuard/>} />
+                </Routes>
             )
         } else {
             return (
@@ -245,7 +244,9 @@ export default class Admin extends React.Component<AdminProps, State> {
                             navigations={this.state.navigations}
                             iframeShow={this.state.iframeShow}
                             onIframeTabChange={this.onIframeTabChange}
-                            {...this.props}
+                            navigate={this.props.navigate}
+                            location={this.props.location}
+                            store={store}
                         />
                         {this.state.iframeShow ? (
                             <iframe
@@ -257,10 +258,9 @@ export default class Admin extends React.Component<AdminProps, State> {
                                 scrolling="no"
                             />
                         ) : (
-                            <Switch>
-                                <RouterGuard/>
-                                <Redirect to={`/404`}/>
-                            </Switch>
+                            <Routes>
+                                <Route path="*" element={<RouterGuard/>} />
+                            </Routes>
                         )}
                     </Layout>
                     <Affix className={cx("fixButton")}>
@@ -293,3 +293,11 @@ export default class Admin extends React.Component<AdminProps, State> {
         }
     }
 }
+
+const AdminWithRouter = (props: any) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    return <Admin {...props} navigate={navigate} location={location} />;
+};
+
+export default AdminWithRouter

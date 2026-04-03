@@ -3,7 +3,7 @@ import { render as renderSchema, replaceText } from "amis"
 import { IMainStore } from "@/stores"
 import { getEnv } from "mobx-state-tree"
 import { inject, observer } from "mobx-react"
-import { withRouter, RouteComponentProps } from "react-router"
+import { useNavigate, useLocation } from "react-router-dom"
 import * as qs from "qs"
 import { Action } from "amis/lib/types"
 import * as cn from "../locales/zh-cn.json"
@@ -11,6 +11,8 @@ import * as en from "../locales/en-us.json"
 
 interface RendererProps {
     schema?: any
+    navigate?: any
+    location?: any
     [propName: string]: any
 }
 
@@ -20,10 +22,8 @@ const lang = {
 }
 
 @inject("store")
-// @ts-ignore
-@withRouter
 @observer
-export default class AMisRenderer extends React.Component<RendererProps, any> {
+class AMisRenderer extends React.Component<RendererProps, any> {
     env: any = null
 
     handleAction = (e: any, action: Action) => {
@@ -40,14 +40,14 @@ export default class AMisRenderer extends React.Component<RendererProps, any> {
         const copy = getEnv(store).copy
         const apiHost = getEnv(store).apiHost
         const getModalContainer = getEnv(store).getModalContainer
-        const history = props.history
+        const navigate = props.navigate
+        const location = props.location
 
         const normalizeLink = (to: string) => {
             if (/^\/api\//.test(to)) {
                 return to
             }
             to = to || ""
-            const location = history.location
             if (to && to[0] === "#") {
                 to = location.pathname + location.search + to
             } else if (to && to[0] === "?") {
@@ -87,15 +87,12 @@ export default class AMisRenderer extends React.Component<RendererProps, any> {
                 props.updateLocation ||
                 ((location: string, replace: boolean) => {
                     if (location === "goBack") {
-                        return history.goBack()
+                        return navigate(-1)
                     }
-                    history[replace ? "replace" : "push"](
-                        normalizeLink(location)
-                    )
+                    navigate(normalizeLink(location), { replace })
                 }),
             isCurrentUrl: (to: string) => {
                 const link = normalizeLink(to)
-                const location = history.location
                 let pathname = link
                 let search = ""
                 const idx = link.indexOf("?")
@@ -121,7 +118,7 @@ export default class AMisRenderer extends React.Component<RendererProps, any> {
                 props.jumpTo ||
                 ((to: string, action?: any) => {
                     if (to === "goBack") {
-                        return history.goBack()
+                        return navigate(-1)
                     }
                     to = normalizeLink(to)
                     if (action && action.actionType === "url") {
@@ -133,7 +130,7 @@ export default class AMisRenderer extends React.Component<RendererProps, any> {
                     if (/^https?:\/\//.test(to)) {
                         window.location.replace(to)
                     } else {
-                        history.push(to)
+                        navigate(to)
                     }
                 }),
             fetcher,
@@ -161,3 +158,11 @@ export default class AMisRenderer extends React.Component<RendererProps, any> {
         )
     }
 }
+
+const AMisRendererWithRouter = (props: any) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    return <AMisRenderer {...props} navigate={navigate} location={location} />;
+};
+
+export default AMisRendererWithRouter

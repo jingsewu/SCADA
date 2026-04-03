@@ -1,11 +1,11 @@
 import * as React from "react"
-import { Route } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import path2components from "@/routes/path2Compoment"
 import KeepAlive from "react-activation"
 import { NotFound, Spinner } from "amis"
 import { handleRouteData } from "@/pages/components/TabsLayout"
 
-export default class RouterGuard extends React.Component<any, any> {
+class RouterGuard extends React.Component<any, any> {
     componentDidMount() {
         this.refreshRoute()
     }
@@ -61,21 +61,21 @@ export default class RouterGuard extends React.Component<any, any> {
     render() {
         return (
             <React.Suspense fallback={<p>loading</p>}>
-                <Route
-                    path={this.state.pathname}
-                    exact
-                    render={() => (
-                        <KeepAlive
-                            id={this.state.pathname}
-                            name={this.state.pathname}
-                            when={this.state.routeWhen}
-                        >
-                            {React.createElement(this.state.component)}
-                        </KeepAlive>
-                    )}
-                    // render={() => React.createElement(this.state.component)}
-                ></Route>
+                <KeepAlive
+                    id={this.state.pathname}
+                    name={this.state.pathname}
+                    when={this.state.routeWhen}
+                >
+                    {React.createElement(this.state.component)}
+                </KeepAlive>
             </React.Suspense>
         )
     }
 }
+
+const RouterGuardWithLocation = (props: any) => {
+    const location = useLocation();
+    return <RouterGuard {...props} location={location} />;
+};
+
+export default RouterGuardWithLocation

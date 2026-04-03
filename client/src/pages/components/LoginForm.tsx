@@ -1,24 +1,21 @@
 import * as React from "react"
 import {Button, Checkbox, Form, Input, Typography} from "antd"
-import {RouteComponentProps} from "react-router-dom"
+import {useNavigate} from "react-router-dom"
 import Message, {MessageType} from "@/pages/components/message"
 
 import {IMainStore} from "@/stores"
 import {inject, observer} from "mobx-react"
-import {withRouter} from "react-router"
 import request from "@/utils/requestInterceptor"
 import "@/scss/style.scss"
 import {withTranslation} from "react-i18next"
 
 const {Title, Text} = Typography
 
-interface LoginProps extends RouteComponentProps<any> {
+interface LoginProps {
     store: IMainStore
 }
 
 @inject("store")
-// @ts-ignore
-@withRouter
 @observer
 class LoginForm extends React.Component<any> {
     state = {
@@ -27,7 +24,7 @@ class LoginForm extends React.Component<any> {
     }
 
     handleFormSaved = (values: { username: string; password: string }) => {
-        const history = this.props.history;
+        const navigate = this.props.navigate;
         const store = this.props.store;
         const {t} = this.props;
 
@@ -46,7 +43,7 @@ class LoginForm extends React.Component<any> {
                     content: t("toast.loginSuccess"),
                 });
                 // Navigate to the dashboard
-                history.replace(`/dashboard`);
+                navigate(`/dashboard`, { replace: true });
             } else {
                 // toast["error"]("Login failed", "Message");
             }
@@ -124,4 +121,9 @@ class LoginForm extends React.Component<any> {
     }
 }
 
-export default withTranslation()(LoginForm)
+const LoginFormWithRouter = (props: any) => {
+    const navigate = useNavigate();
+    return <LoginForm {...props} navigate={navigate} />;
+};
+
+export default withTranslation()(LoginFormWithRouter)
