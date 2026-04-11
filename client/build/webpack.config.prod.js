@@ -53,7 +53,13 @@ module.exports = {
             },
             {
                 test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+                exclude: /node_modules/,
                 use: [{ loader: "@svgr/webpack", options: { icon: true } }]
+            },
+            {
+                test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+                include: /node_modules/,
+                use: ["file-loader"]
             }
         ]
     },
