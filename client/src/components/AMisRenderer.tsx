@@ -11,41 +11,28 @@ import * as en from "../locales/en-us.json"
 
 interface RendererProps {
     schema?: any
+    navigate?: any
+    location?: any
     [propName: string]: any
 }
 
-type Locale = "zh-CN" | "en-US"
-
-const lang: Record<Locale, any> = {
+const lang = {
     "zh-CN": cn,
     "en-US": en
 }
 
-
-interface AMisRendererInnerProps extends RendererProps {
-    store?: IMainStore
-    navigate: ReturnType<typeof useNavigate>
-    location: ReturnType<typeof useLocation>
-}
-
+@inject("store")
 @observer
-class AMisRendererInner extends React.Component<AMisRendererInnerProps, any> {
+class AMisRenderer extends React.Component<RendererProps, any> {
     env: any = null
 
     handleAction = (e: any, action: Action) => {
         this.env.alert(`没有识别的动作：${JSON.stringify(action)}`)
     }
 
-    constructor(props: AMisRendererInnerProps) {
+    constructor(props: RendererProps) {
         super(props)
-        const store = props.store
-        const navigate = props.navigate
-        const location = props.location
-
-        if (!store) {
-            throw new Error("Store is required")
-        }
-
+        const store = props.store as IMainStore
         const fetcher = getEnv(store).fetcher
         const notify = getEnv(store).notify
         const alert = getEnv(store).alert
@@ -53,8 +40,13 @@ class AMisRendererInner extends React.Component<AMisRendererInnerProps, any> {
         const copy = getEnv(store).copy
         const apiHost = getEnv(store).apiHost
         const getModalContainer = getEnv(store).getModalContainer
+        const navigate = props.navigate
+        const location = props.location
 
         const normalizeLink = (to: string) => {
+            if (/^\/api\//.test(to)) {
+                return to
+            }
             to = to || ""
             if (to && to[0] === "#") {
                 to = location.pathname + location.search + to
@@ -66,8 +58,8 @@ class AMisRendererInner extends React.Component<AMisRendererInnerProps, any> {
             let pathname = ~idx
                 ? to.substring(0, idx)
                 : ~idx2
-                    ? to.substring(0, idx2)
-                    : to
+                ? to.substring(0, idx2)
+                : to
             let search = ~idx ? to.substring(idx, ~idx2 ? idx2 : undefined) : ""
             let hash = ~idx2 ? to.substring(idx2) : ""
             if (!pathname) {
@@ -88,6 +80,7 @@ class AMisRendererInner extends React.Component<AMisRendererInnerProps, any> {
             return pathname + search + hash
         }
 
+        // todo，这个过程可以 cache
         this.env = {
             session: "global",
             updateLocation:
@@ -151,25 +144,25 @@ class AMisRendererInner extends React.Component<AMisRendererInnerProps, any> {
     }
 
     render() {
-        const { schema, store, onAction, navigate, location, ...rest } = this.props
+        const { schema, store, onAction, ...rest } = this.props
         return renderSchema(
             schema,
             {
+                // onAction: onAction || this.handleAction,
                 onAction: onAction,
                 theme: store && store.theme,
                 locale: store && store.locale,
                 ...rest
             },
-            { ...this.env, replaceText: lang[store!.locale as Locale] }        )
+            { ...this.env, replaceText: lang[store.locale] }
+        )
     }
 }
 
-function withRouter(Component: React.ComponentType<AMisRendererInnerProps>) {
-    return function WithRouter(props: Omit<AMisRendererInnerProps, 'navigate' | 'location'>) {
-        const navigate = useNavigate()
-        const location = useLocation()
-        return <Component {...props} navigate={navigate} location={location} />
-    }
-}
+const AMisRendererWithRouter = (props: any) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    return <AMisRenderer {...props} navigate={navigate} location={location} />;
+};
 
-export default withRouter(inject("store")(AMisRendererInner))
+export default AMisRendererWithRouter

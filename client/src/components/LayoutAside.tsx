@@ -1,4 +1,4 @@
-import { Link, matchPath } from "react-router-dom"
+import { Link, useLocation, matchRoutes } from "react-router-dom"
 import { AsideNav } from "amis"
 import store from "@/stores"
 import React from "react"
@@ -7,12 +7,14 @@ import {useTranslation} from "react-i18next";
 const WorkStation = "/wms/workStation" // 工作站路由
 
 const RenderAside = ({ navigations, iframeShow, iframeMenuClick }: any) => {
-    function isActive(link: any, location: any) {
+    const location = useLocation();
+
+    function isActive(link: any) {
         if (location.pathname?.includes(WorkStation)) {
             return link?.includes(WorkStation)
         }
-        const ret = matchPath(link ? link.replace(/\?.*$/, "") : "", location.pathname)
-        return !!ret
+        const linkPath = link ? link.replace(/\?.*$/, "") : "";
+        return location.pathname === linkPath || location.pathname.startsWith(linkPath + '/');
     }
 
     const {t} = useTranslation();
@@ -115,7 +117,7 @@ const RenderAside = ({ navigations, iframeShow, iframeMenuClick }: any) => {
                 )
             }}
             isActive={(link: any) =>
-                isActive(iframeShow ? link.permissions : link.path, location)
+                isActive(iframeShow ? link.permissions : link.path)
             }
         />
     )

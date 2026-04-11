@@ -3,12 +3,11 @@ import { Tabs } from "antd"
 import { useAliveController } from "react-activation"
 import path2components from "@/routes/path2Compoment"
 import type { Navigations } from "@/pages/index"
-import { useNavigate, useLocation } from "react-router-dom"
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string
 
 type Iprops = {
-    history: any
+    navigate: any
     location: { pathname: string }
     store: any
     selectedApp: string
@@ -86,14 +85,14 @@ const handleIframeData = (routes: any, locale: any) => {
 
 const TabsLayout = (props: Iprops) => {
     const {
+        navigate,
+        location,
         store,
         selectedApp,
         navigations,
         iframeShow,
         onIframeTabChange
     } = props
-    const navigate = useNavigate()
-    const location = useLocation()
     const { dropScope, refresh } = useAliveController() // 清除缓存函数
     const [first, setFirst] = useState(true) // 是否首次加载
     const [activeKey, setActiveKey] = useState<string>("") // 当前高亮的路由tab
@@ -200,7 +199,7 @@ const TabsLayout = (props: Iprops) => {
         if (currentTabList.length > 0) {
             setTabList(currentTabList)
             setActiveKey(currentTabList[0]?.key || "")
-            navigate(currentTabList[0]?.path || "", { replace: true })
+            navigate(currentTabList[0]?.path, { replace: true })
         } else {
             const defaultPath = navigations[0]?.children?.[0]?.path
             const currentTab = getAllowed(defaultPath as string) as TabList
@@ -211,7 +210,7 @@ const TabsLayout = (props: Iprops) => {
                 }
             ])
             setActiveKey(currentTab?.key)
-            navigate(currentTab?.path || "", { replace: true })
+            navigate(currentTab?.path, { replace: true })
         }
     }
 
@@ -220,7 +219,7 @@ const TabsLayout = (props: Iprops) => {
         if (currentTabList.length > 0) {
             tabListLocalChange(currentTabList)
             setActiveKey(currentTabList[0]?.key || "")
-            navigate(currentTabList[0]?.key || "", { replace: true })
+            navigate(currentTabList[0]?.key, { replace: true })
         } else {
             const languageValueMappings =
                 navigations[0].children[0].languageValueMappings
@@ -234,7 +233,7 @@ const TabsLayout = (props: Iprops) => {
                 }
             ])
             setActiveKey(navigations[0].children[0].permissions || "")
-            navigate(navigations[0].children[0].permissions || "", { replace: true })
+            navigate(navigations[0].children[0].permissions, { replace: true })
         }
     }
 
@@ -247,7 +246,7 @@ const TabsLayout = (props: Iprops) => {
             onIframeTabChange(tab.path)
             return
         }
-        navigate(tab.path || "", { replace: true })
+        navigate(tab.path, { replace: true })
     }
 
     const remove = (targetKey: string) => {

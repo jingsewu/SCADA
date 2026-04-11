@@ -1,5 +1,6 @@
 import * as React from "react"
 import {Button, Checkbox, Form, Input, Typography} from "antd"
+import {useNavigate} from "react-router-dom"
 import Message, {MessageType} from "@/pages/components/message"
 
 import {IMainStore} from "@/stores"
@@ -7,27 +8,25 @@ import {inject, observer} from "mobx-react"
 import request from "@/utils/requestInterceptor"
 import "@/scss/style.scss"
 import {withTranslation} from "react-i18next"
-import {useNavigate} from "react-router-dom"
 
 const {Title, Text} = Typography
 
 interface LoginProps {
     store: IMainStore
-    t: any
-    navigate: ReturnType<typeof useNavigate>
 }
 
+@inject("store")
 @observer
-class LoginForm extends React.Component<LoginProps, any> {
+class LoginForm extends React.Component<any> {
     state = {
         username: "admin",
         password: "123456"
     }
 
     handleFormSaved = (values: { username: string; password: string }) => {
-        const navigate = this.props.navigate
-        const store = this.props.store
-        const {t} = this.props
+        const navigate = this.props.navigate;
+        const store = this.props.store;
+        const {t} = this.props;
 
         request({
             method: "post",
@@ -44,7 +43,7 @@ class LoginForm extends React.Component<LoginProps, any> {
                     content: t("toast.loginSuccess"),
                 });
                 // Navigate to the dashboard
-                navigate(`/dashboard`);
+                navigate(`/dashboard`, { replace: true });
             } else {
                 // toast["error"]("Login failed", "Message");
             }
@@ -122,11 +121,9 @@ class LoginForm extends React.Component<LoginProps, any> {
     }
 }
 
-function withRouter(Component: React.ComponentType<LoginProps>) {
-    return function WithRouter(props: Omit<LoginProps, 'navigate'>) {
-        const navigate = useNavigate()
-        return <Component {...props} navigate={navigate} />
-    }
-}
+const LoginFormWithRouter = (props: any) => {
+    const navigate = useNavigate();
+    return <LoginForm {...props} navigate={navigate} />;
+};
 
-export default withTranslation()(withRouter(inject("store")(LoginForm)))
+export default withTranslation()(LoginFormWithRouter)

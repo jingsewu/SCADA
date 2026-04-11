@@ -1,4 +1,5 @@
 import { types, getEnv } from "mobx-state-tree"
+import { configure } from "mobx"
 import User from "./User"
 import Warehouse from "@/stores/Warehouse"
 import copy from "copy-to-clipboard"
@@ -7,6 +8,8 @@ import { toast, alert, confirm } from "amis"
 import axios from "axios"
 import React from "react"
 import { Translation } from "react-i18next"
+
+configure({ isolateGlobalState: true })
 
 const MainStore = types
     .model("MainStore", {

@@ -1,5 +1,5 @@
 import * as React from "react"
-import {Navigate, Route, Routes, useNavigate, useLocation} from "react-router-dom"
+import {Navigate, Routes, Route, useNavigate, useLocation} from "react-router-dom"
 import {Layout, toast} from "amis"
 import {IMainStore} from "@/stores"
 import {inject, observer} from "mobx-react"
@@ -46,16 +46,13 @@ export interface State {
 
 export interface AdminProps {
     store: IMainStore
-}
-
-interface AdminInnerProps extends AdminProps {
-    navigate: ReturnType<typeof useNavigate>
-    location: ReturnType<typeof useLocation>
+    navigate?: any
+    location?: any
 }
 
 @inject("store")
 @observer
-class Admin extends React.Component<AdminInnerProps, State> {
+class Admin extends React.Component<AdminProps, State> {
     state: State = {
         menus: Object,
         selectedApp: "",
@@ -71,7 +68,7 @@ class Admin extends React.Component<AdminInnerProps, State> {
         let menus: any = this.state.menus
         this.setState({
             selectedApp: value.key,
-            navigations: menus[value.key] ? [menus[value.key]] : [],
+            navigations: [menus[value.key]] || [],
             iframeShow: menus[value.key].iframeShow,
             iframeUrl: menus[value.key].children?.[0]?.path
         })
@@ -99,14 +96,16 @@ class Admin extends React.Component<AdminInnerProps, State> {
     logout = () => {
         const store = this.props.store
         store.user.logout()
-        this.props.navigate(`/login`, {replace: true})
+        const navigate = this.props.navigate
+        navigate(`/login`, { replace: true })
     }
 
     componentDidMount() {
         const store = this.props.store
+        const navigate = this.props.navigate
         if (!store.user.isAuthenticated) {
             toast["error"]("用户未登陆，请先登陆！", "消息")
-            this.props.navigate(`/login`, {replace: true})
+            navigate(`/login`, { replace: true })
         }
         this.refreshMenu()
         this.getAllDictionaryData()
@@ -136,7 +135,7 @@ class Admin extends React.Component<AdminInnerProps, State> {
                 localStorage.setItem("permissions", res.data.permissions)
                 let applications: string[] = Object.keys(menus)
                 let selectedApp = applications[0]
-                let navigations = menus[selectedApp] ? [menus[selectedApp]] : []
+                let navigations = [menus[selectedApp]] || []
                 const options = applications.map((value) => {
                     return {
                         key: value,
@@ -176,7 +175,8 @@ class Admin extends React.Component<AdminInnerProps, State> {
             ...this.state,
             iframeUrl: path
         })
-        this.props.navigate(permissions, {replace: true})
+        const navigate = this.props.navigate
+        navigate(permissions, { replace: true })
     }
 
     onIframeTabChange = (path: string) => {
@@ -214,8 +214,7 @@ class Admin extends React.Component<AdminInnerProps, State> {
         if (pathname == "login" || pathname == "/") {
             return (
                 <Routes>
-                    <Route path="/" element={<RouterGuard />} />
-                    <Route path="*" element={<Navigate to="/404" replace />} />
+                    <Route path="*" element={<RouterGuard/>} />
                 </Routes>
             )
         } else {
@@ -241,13 +240,13 @@ class Admin extends React.Component<AdminInnerProps, State> {
                         offScreen={store.offScreen}
                     >
                         <TabsLayout
-                            history={this.props.navigate}
-                            location={this.props.location}
-                            store={store}
                             selectedApp={this.state.selectedApp}
                             navigations={this.state.navigations}
                             iframeShow={this.state.iframeShow}
                             onIframeTabChange={this.onIframeTabChange}
+                            navigate={this.props.navigate}
+                            location={this.props.location}
+                            store={store}
                         />
                         {this.state.iframeShow ? (
                             <iframe
@@ -260,8 +259,7 @@ class Admin extends React.Component<AdminInnerProps, State> {
                             />
                         ) : (
                             <Routes>
-                                <Route path="/" element={<RouterGuard/>}/>
-                                <Route path="*" element={<Navigate to="/404" replace/>}/>
+                                <Route path="*" element={<RouterGuard/>} />
                             </Routes>
                         )}
                     </Layout>
@@ -296,12 +294,10 @@ class Admin extends React.Component<AdminInnerProps, State> {
     }
 }
 
-function withRouter(Component: React.ComponentType<AdminInnerProps>) {
-    return function WithRouter(props: AdminProps) {
-        const navigate = useNavigate()
-        const location = useLocation()
-        return <Component {...props} navigate={navigate} location={location}/>
-    }
-}
+const AdminWithRouter = (props: any) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    return <Admin {...props} navigate={navigate} location={location} />;
+};
 
-export default withRouter(inject("store")(Admin))
+export default AdminWithRouter

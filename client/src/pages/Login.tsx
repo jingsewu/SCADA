@@ -11,11 +11,11 @@ interface LoginProps {
     t: any
 }
 
+@inject("store")
 @observer
 class LoginRoute extends React.Component<LoginProps, any> {
     render() {
         const {t} = this.props
-        const LoginFormComponent = LoginForm as any
         return (
             <div className="login-page-container d-flex justify-center">
                 <div className="w-1/2">
@@ -23,7 +23,7 @@ class LoginRoute extends React.Component<LoginProps, any> {
                         className="relative h-full d-flex flex-col justify-center items-center"
                     >
                         <div className="flex-1 d-flex flex-col justify-center max-w-6xl">
-                            <LoginFormComponent/>
+                            <LoginForm/>
                         </div>
                     </div>
                 </div>
@@ -56,4 +56,4 @@ class LoginRoute extends React.Component<LoginProps, any> {
     }
 }
 
-export default withTranslation()(inject("store")(LoginRoute))
+export default withTranslation()(LoginRoute)
