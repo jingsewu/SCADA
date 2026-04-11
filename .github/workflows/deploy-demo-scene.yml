@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - upgrade_18
     paths:
       - 'demo-scene/**'
   workflow_dispatch:
