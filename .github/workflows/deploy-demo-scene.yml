@@ -33,6 +33,13 @@ jobs:
         with:
           enablement: true
 
+      - name: Fix asset base path for GitHub Pages
+        run: |
+          sed -i 's|href="/assets/|href="/SCADA/assets/|g' demo-scene/index.html
+          sed -i 's|src="/assets/|src="/SCADA/assets/|g' demo-scene/index.html
+          sed -i 's|import("/assets/|import("/SCADA/assets/|g' demo-scene/index.html
+          sed -i 's|"/assets/|"/SCADA/assets/|g' demo-scene/index.html
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
