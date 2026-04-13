@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+@import "tailwindcss";
+
+@layer base {
+  :root,
+  :host {
+    --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  /* Light theme (default) */
+  :root,
+  :root.light {
+    --sea-ink: #0a1628;
+    --sea-ink-soft: #4a5568;
+    --line: #e2e8f0;
+    --link-bg-hover: #f0f4f8;
+    --bg: #ffffff;
+    --island-bg: #f8fafc;
+    color-scheme: light;
+  }
+
+  /* Dark theme */
+  :root.dark {
+    --sea-ink: #e2e8f0;
+    --sea-ink-soft: #94a3b8;
+    --line: #2d3748;
+    --link-bg-hover: #1a202c;
+    --bg: #0d1117;
+    --island-bg: #161b22;
+    color-scheme: dark;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--bg);
+    color: var(--sea-ink);
+  }
+}
+
+@layer components {
+  .page-wrap {
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .island-shell {
+    background-color: var(--island-bg);
+    border: 1px solid var(--line);
+  }
+
+  .island-kicker {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sea-ink-soft);
+  }
+
+  .display-title {
+    font-family: "Fraunces", ui-serif, Georgia, serif;
+    line-height: 1.1;
+  }
+}
