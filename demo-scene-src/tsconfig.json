@@ -13,5 +13,5 @@
       "~/*": ["./app/*"]
     }
   },
-  "include": ["app/**/*", "app.config.ts"]
+  "include": ["app/**/*", "vite.config.ts"]
 }
