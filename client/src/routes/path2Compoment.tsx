@@ -166,6 +166,42 @@ const menuRouter = [
         path: "/scada/log/scada-log",
         name: <Translation>{(t) => t("scada.log.scadaLog.title")}</Translation>,
         component: lazy(() => import("@/pages/scada/log/scada_log")) // Assuming one more file exists
+    },
+    // 电表管理
+    {
+        path: "/scada/monitor/meter-management",
+        name: (
+            <Translation>
+                {(t) => t("scada.monitor.meterManagement.title")}
+            </Translation>
+        ),
+        component: lazy(
+            () => import("@/pages/scada/monitor/meter_management")
+        )
+    },
+    // 网络拓扑图
+    {
+        path: "/scada/monitor/network-topology",
+        name: (
+            <Translation>
+                {(t) => t("scada.monitor.networkTopology.title")}
+            </Translation>
+        ),
+        component: lazy(
+            () => import("@/pages/scada/monitor/network_topology")
+        )
+    },
+    // 设备巡检
+    {
+        path: "/scada/maintenance/equipment-inspection",
+        name: (
+            <Translation>
+                {(t) => t("scada.maintenance.equipmentInspection.title")}
+            </Translation>
+        ),
+        component: lazy(
+            () => import("@/pages/scada/maintenance/equipment_inspection")
+        )
     }
 ]
 

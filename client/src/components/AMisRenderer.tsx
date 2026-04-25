@@ -27,7 +27,7 @@ export default class AMisRenderer extends React.Component<RendererProps, any> {
     env: any = null
 
     handleAction = (e: any, action: Action) => {
-        this.env.alert(`没有识别的动作：${JSON.stringify(action)}`)
+        this.env.alert(`Unrecognized action: ${JSON.stringify(action)}`)
     }
 
     constructor(props: RendererProps) {
