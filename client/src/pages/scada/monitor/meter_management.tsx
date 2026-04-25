@@ -8,61 +8,68 @@ const formBody = [
         name: "id"
     },
     {
-        label: "电表编号",
+        label: "scada.monitor.meterManagement.meterNo",
         type: "input-text",
         name: "meterNo",
         required: true
     },
     {
-        label: "电表名称",
+        label: "scada.monitor.meterManagement.meterName",
         type: "input-text",
         name: "meterName",
         required: true
     },
     {
-        label: "电表类型",
+        label: "scada.monitor.meterManagement.meterType",
         type: "select",
         name: "meterType",
         required: true,
-        options: ["单相电表", "三相电表"]
+        options: [
+            { label: "scada.monitor.meterManagement.singlePhase", value: "单相电表" },
+            { label: "scada.monitor.meterManagement.threePhase", value: "三相电表" }
+        ]
     },
     {
-        label: "所属电柜",
+        label: "scada.monitor.meterManagement.cabinetNo",
         type: "input-text",
         name: "cabinetNo",
         required: true
     },
     {
-        label: "安装位置",
+        label: "scada.monitor.meterManagement.location",
         type: "input-text",
         name: "location",
         required: true
     },
     {
-        label: "额定电压(V)",
+        label: "scada.monitor.meterManagement.ratedVoltage",
         type: "input-number",
         name: "ratedVoltage"
     },
     {
-        label: "额定电流(A)",
+        label: "scada.monitor.meterManagement.ratedCurrent",
         type: "input-number",
         name: "ratedCurrent"
     },
     {
-        label: "状态",
+        label: "common.status",
         type: "select",
         name: "status",
         required: true,
-        options: ["正常", "异常", "离线"]
+        options: [
+            { label: "scada.monitor.meterManagement.statusNormal", value: "正常" },
+            { label: "scada.monitor.meterManagement.statusAbnormal", value: "异常" },
+            { label: "scada.monitor.meterManagement.statusOffline", value: "离线" }
+        ]
     },
     {
-        label: "安装日期",
+        label: "scada.monitor.meterManagement.installDate",
         type: "input-date",
         name: "installDate",
         format: "YYYY-MM-DD"
     },
     {
-        label: "备注",
+        label: "common.remark",
         type: "textarea",
         name: "remark"
     }
@@ -76,52 +83,55 @@ const crudColumns = [
     },
     {
         name: "meterNo",
-        label: "电表编号",
+        label: "scada.monitor.meterManagement.meterNo",
         searchable: true
     },
     {
         name: "meterName",
-        label: "电表名称",
+        label: "scada.monitor.meterManagement.meterName",
         searchable: true
     },
     {
         name: "meterType",
-        label: "电表类型",
+        label: "scada.monitor.meterManagement.meterType",
         searchable: {
             type: "select",
-            options: ["单相电表", "三相电表"]
+            options: [
+                { label: "scada.monitor.meterManagement.singlePhase", value: "单相电表" },
+                { label: "scada.monitor.meterManagement.threePhase", value: "三相电表" }
+            ]
         }
     },
     {
         name: "cabinetNo",
-        label: "所属电柜",
+        label: "scada.monitor.meterManagement.cabinetNo",
         searchable: true
     },
     {
         name: "location",
-        label: "安装位置"
+        label: "scada.monitor.meterManagement.location"
     },
     {
         name: "ratedVoltage",
-        label: "额定电压(V)"
+        label: "scada.monitor.meterManagement.ratedVoltage"
     },
     {
         name: "ratedCurrent",
-        label: "额定电流(A)"
+        label: "scada.monitor.meterManagement.ratedCurrent"
     },
     {
         name: "status",
-        label: "状态",
+        label: "common.status",
         type: "tpl",
         tpl: "<span class='label label-${status === \"正常\" ? \"success\" : status === \"异常\" ? \"danger\" : \"default\"}'>${status}</span>"
     },
     {
         name: "installDate",
-        label: "安装日期"
+        label: "scada.monitor.meterManagement.installDate"
     },
     {
         name: "remark",
-        label: "备注"
+        label: "common.remark"
     }
 ];
 
@@ -129,13 +139,13 @@ const searchIdentity = "MMeter";
 
 const schema = {
     type: "page",
-    title: "电表管理",
+    title: "scada.monitor.meterManagement.title",
     body: [
         {
             type: "tabs",
             tabs: [
                 {
-                    title: "电表列表",
+                    title: "scada.monitor.meterManagement.meterList",
                     body: [
                         {
                             type: "crud",
@@ -157,15 +167,15 @@ const schema = {
                                 ...crudColumns,
                                 {
                                     type: "operation",
-                                    label: "操作",
+                                    label: "common.operation",
                                     width: 230,
                                     buttons: [
                                         {
-                                            label: "修改",
+                                            label: "button.modify",
                                             type: "button",
                                             actionType: "drawer",
                                             drawer: {
-                                                title: "修改电表信息",
+                                                title: "scada.monitor.meterManagement.editMeter",
                                                 closeOnEsc: true,
                                                 closeOnOutside: true,
                                                 body: {
@@ -176,12 +186,12 @@ const schema = {
                                             }
                                         },
                                         {
-                                            label: "删除",
+                                            label: "button.delete",
                                             type: "button",
                                             actionType: "ajax",
                                             level: "danger",
-                                            confirmText: "确定要删除该电表吗？",
-                                            confirmTitle: "删除确认",
+                                            confirmText: "scada.monitor.meterManagement.confirmDelete",
+                                            confirmTitle: "common.deleteConfirmTitle",
                                             api: meter_delete,
                                             reload: "MeterTable"
                                         }
@@ -192,10 +202,10 @@ const schema = {
                             headerToolbar: [
                                 {
                                     type: "button",
-                                    label: "新增电表",
+                                    label: "scada.monitor.meterManagement.addMeter",
                                     actionType: "drawer",
                                     drawer: {
-                                        title: "新增电表",
+                                        title: "scada.monitor.meterManagement.addMeter",
                                         body: {
                                             type: "form",
                                             api: meter_create,
@@ -210,7 +220,7 @@ const schema = {
                     ]
                 },
                 {
-                    title: "电力数据统计",
+                    title: "scada.monitor.meterManagement.powerDataStats",
                     body: [
                         {
                             type: "form",
@@ -222,14 +232,14 @@ const schema = {
                                 {
                                     type: "select",
                                     name: "cabinetNo",
-                                    label: "电柜",
+                                    label: "scada.monitor.meterManagement.cabinet",
                                     clearable: true,
                                     source: {
                                         method: "post",
                                         url: "/search/search?page=1&perPage=100",
                                         data: {
                                             searchIdentity: searchIdentity,
-                                            showColumns: [{ name: "cabinetNo", label: "所属电柜" }]
+                                            showColumns: [{ name: "cabinetNo", label: "scada.monitor.meterManagement.cabinetNo" }]
                                         },
                                         adaptor: (payload: any) => ({
                                             options: (payload?.data?.items || []).map((item: any) => ({
@@ -242,7 +252,7 @@ const schema = {
                                 {
                                     type: "input-datetime-range",
                                     name: "queryTime",
-                                    label: "查询时间",
+                                    label: "scada.monitor.meterManagement.queryTime",
                                     format: "YYYY-MM-DD HH:mm:ss",
                                     inputFormat: "YYYY-MM-DD HH:mm:ss"
                                 }
@@ -250,13 +260,13 @@ const schema = {
                             actions: [
                                 {
                                     type: "button",
-                                    label: "搜索",
+                                    label: "button.search",
                                     actionType: "submit",
                                     level: "primary"
                                 },
                                 {
                                     type: "button",
-                                    label: "重置",
+                                    label: "button.reset",
                                     actionType: "reset"
                                 }
                             ]
@@ -268,7 +278,7 @@ const schema = {
                                     md: 3,
                                     body: {
                                         type: "card",
-                                        header: { title: "当前总功率" },
+                                        header: { title: "scada.monitor.meterManagement.currentTotalPower" },
                                         body: {
                                             type: "tpl",
                                             tpl: "<div class='text-center'><h1 class='text-info'>-- KW</h1></div>"
@@ -279,7 +289,7 @@ const schema = {
                                     md: 3,
                                     body: {
                                         type: "card",
-                                        header: { title: "最高电流" },
+                                        header: { title: "scada.monitor.meterManagement.maxCurrent" },
                                         body: {
                                             type: "tpl",
                                             tpl: "<div class='text-center'><h1 class='text-danger'>-- A</h1></div>"
@@ -290,7 +300,7 @@ const schema = {
                                     md: 3,
                                     body: {
                                         type: "card",
-                                        header: { title: "平均电压" },
+                                        header: { title: "scada.monitor.meterManagement.avgVoltage" },
                                         body: {
                                             type: "tpl",
                                             tpl: "<div class='text-center'><h1 class='text-success'>-- V</h1></div>"
@@ -301,7 +311,7 @@ const schema = {
                                     md: 3,
                                     body: {
                                         type: "card",
-                                        header: { title: "电表总数" },
+                                        header: { title: "scada.monitor.meterManagement.totalMeters" },
                                         body: {
                                             type: "tpl",
                                             tpl: "<div class='text-center'><h1 class='text-warning'>--</h1></div>"
@@ -319,29 +329,29 @@ const schema = {
                                         type: "chart",
                                         name: "powerDataChart",
                                         config: {
-                                            title: { text: "电流趋势 (A)" },
+                                            title: { text: "${scada.monitor.meterManagement.currentTrend | t}" },
                                             tooltip: { trigger: "axis" },
-                                            legend: { data: ["A相电流", "B相电流", "C相电流"] },
+                                            legend: { data: ["${scada.monitor.meterManagement.phaseACurrent | t}", "${scada.monitor.meterManagement.phaseBCurrent | t}", "${scada.monitor.meterManagement.phaseCCurrent | t}"] },
                                             xAxis: {
                                                 type: "category",
                                                 data: ["00:00", "02:00", "04:00", "06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00"]
                                             },
-                                            yAxis: { type: "value", name: "电流(A)" },
+                                            yAxis: { type: "value", name: "${scada.monitor.meterManagement.currentUnit | t}" },
                                             series: [
                                                 {
-                                                    name: "A相电流",
+                                                    name: "${scada.monitor.meterManagement.phaseACurrent | t}",
                                                     type: "line",
                                                     smooth: true,
                                                     data: [100, 98, 95, 97, 105, 108, 106, 104, 107, 103, 99, 96]
                                                 },
                                                 {
-                                                    name: "B相电流",
+                                                    name: "${scada.monitor.meterManagement.phaseBCurrent | t}",
                                                     type: "line",
                                                     smooth: true,
                                                     data: [98, 96, 93, 95, 103, 106, 104, 102, 105, 101, 97, 94]
                                                 },
                                                 {
-                                                    name: "C相电流",
+                                                    name: "${scada.monitor.meterManagement.phaseCCurrent | t}",
                                                     type: "line",
                                                     smooth: true,
                                                     data: [99, 97, 94, 96, 104, 107, 105, 103, 106, 102, 98, 95]
@@ -356,24 +366,24 @@ const schema = {
                                     body: {
                                         type: "chart",
                                         config: {
-                                            title: { text: "功率趋势 (KW)" },
+                                            title: { text: "${scada.monitor.meterManagement.powerTrend | t}" },
                                             tooltip: { trigger: "axis" },
-                                            legend: { data: ["有功功率", "无功功率"] },
+                                            legend: { data: ["${scada.monitor.meterManagement.activePower | t}", "${scada.monitor.meterManagement.reactivePower | t}"] },
                                             xAxis: {
                                                 type: "category",
                                                 data: ["00:00", "02:00", "04:00", "06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00"]
                                             },
-                                            yAxis: { type: "value", name: "功率(KW)" },
+                                            yAxis: { type: "value", name: "${scada.monitor.meterManagement.powerUnit | t}" },
                                             series: [
                                                 {
-                                                    name: "有功功率",
+                                                    name: "${scada.monitor.meterManagement.activePower | t}",
                                                     type: "line",
                                                     smooth: true,
                                                     areaStyle: {},
                                                     data: [45, 42, 38, 40, 55, 62, 58, 54, 60, 52, 44, 40]
                                                 },
                                                 {
-                                                    name: "无功功率",
+                                                    name: "${scada.monitor.meterManagement.reactivePower | t}",
                                                     type: "line",
                                                     smooth: true,
                                                     areaStyle: {},
