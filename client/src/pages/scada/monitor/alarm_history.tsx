@@ -8,27 +8,27 @@ const formBody = [
         name: "id"
     },
     {
-        label: "设备编号",
+        label: "scada.monitor.alarmHistory.deviceNo",
         type: "input-text",
         name: "deviceNo",
         required: true,
-        placeholder: "请输入设备编号"
+        placeholder: "scada.monitor.alarmHistory.deviceNo.placeholder"
     },
     {
-        label: "报警信息",
+        label: "scada.monitor.alarmHistory.alarmInfo",
         type: "textarea",
         name: "alarmInfo",
         required: true,
-        placeholder: "请输入报警信息"
+        placeholder: "scada.monitor.alarmHistory.alarmInfo.placeholder"
     },
     {
-        label: "建议解决方案",
+        label: "scada.monitor.alarmHistory.solution",
         type: "textarea",
         name: "solution",
-        placeholder: "请输入建议解决方案"
+        placeholder: "scada.monitor.alarmHistory.solution.placeholder"
     },
     {
-        label: "报警时间",
+        label: "scada.monitor.alarmHistory.alarmTime",
         type: "input-datetime",
         name: "alarmTime",
         required: true,
@@ -44,29 +44,29 @@ const crudColumns = [
     },
     {
         name: "deviceNo",
-        label: "设备编号",
+        label: "scada.monitor.alarmHistory.deviceNo",
         searchable: {
             type: "input-text",
             name: "deviceNo",
-            placeholder: "请输入设备编号"
+            placeholder: "scada.monitor.alarmHistory.deviceNo.placeholder"
         }
     },
     {
         name: "alarmInfo",
-        label: "报警信息",
+        label: "scada.monitor.alarmHistory.alarmInfo",
         searchable: {
             type: "input-text",
             name: "alarmInfo",
-            placeholder: "请输入报警信息"
+            placeholder: "scada.monitor.alarmHistory.alarmInfo.placeholder"
         }
     },
     {
         name: "solution",
-        label: "建议解决方案"
+        label: "scada.monitor.alarmHistory.solution"
     },
     {
         name: "alarmTime",
-        label: "报警时间",
+        label: "scada.monitor.alarmHistory.alarmTime",
         type: "datetime",
         format: "YYYY-MM-DD HH:mm:ss",
         sortable: true
@@ -77,7 +77,7 @@ const searchIdentity = "DeviceAlarm"; // 用于后端接口标识
 
 const schema = {
     type: "page",
-    title: "设备报警信息管理",
+    title: "scada.monitor.alarmHistory.pageTitle",
     body: [
         {
             type: "crud",
@@ -99,30 +99,30 @@ const schema = {
                     {
                         type: "input-text",
                         name: "deviceNo",
-                        label: "设备编号",
-                        placeholder: "请输入设备编号"
+                        label: "scada.monitor.alarmHistory.deviceNo",
+                        placeholder: "scada.monitor.alarmHistory.deviceNo.placeholder"
                     },
                     {
                         type: "input-text",
                         name: "alarmInfo",
-                        label: "报警信息",
-                        placeholder: "请输入报警信息"
+                        label: "scada.monitor.alarmHistory.alarmInfo",
+                        placeholder: "scada.monitor.alarmHistory.alarmInfo.placeholder"
                     },
                     {
                         type: "input-datetime-range",
                         name: "alarmTime",
-                        label: "报警时间",
-                        placeholder: ["开始日期", "结束日期"],
+                        label: "scada.monitor.alarmHistory.alarmTime",
+                        placeholder: ["scada.monitor.alarmHistory.startDate", "scada.monitor.alarmHistory.endDate"],
                         format: "YYYY-MM-DD HH:mm:ss"
                     },
                     {
                         type: "submit",
-                        label: "搜索",
+                        label: "button.search",
                         level: "primary"
                     },
                     {
                         type: "reset",
-                        label: "重置"
+                        label: "button.reset"
                     }
                 ]
             },
@@ -215,11 +215,11 @@ const schema = {
             itemActions: [
                 {
                     type: "button",
-                    label: "编辑",
+                    label: "button.edit",
                     level: "link",
                     actionType: "dialog",
                     dialog: {
-                        title: "编辑报警信息",
+                        title: "scada.monitor.alarmHistory.editAlarm",
                         body: {
                             type: "form",
                             initApi: {
@@ -236,11 +236,11 @@ const schema = {
                 },
                 {
                     type: "button",
-                    label: "删除",
+                    label: "button.delete",
                     level: "link",
                     className: "text-danger",
                     actionType: "ajax",
-                    confirmText: "确定要删除这条记录吗？",
+                    confirmText: "toast.sureDelete",
                     api: {
                         method: "post",
                         url: "/api/device-alarm/delete",
@@ -256,9 +256,9 @@ const schema = {
             // 批量操作
             bulkActions: [
                 {
-                    label: "批量删除",
+                    label: "button.batchDelete",
                     actionType: "ajax",
-                    confirmText: "确定要删除选中的 ${items.length} 条记录吗？",
+                    confirmText: "toast.sureBatchDelete",
                     api: {
                         method: "post",
                         url: "/api/device-alarm/batch-delete", // 请替换为实际批量删除接口

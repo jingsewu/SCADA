@@ -8,36 +8,36 @@ const formBody = [
         name: "id"
     },
     {
-        label: "设备状态",
+        label: "scada.monitor.colorConfig.deviceStatus",
         type: "input-number",
         name: "deviceStatus",
         required: true
     },
     {
-        label: "设备类型",
+        label: "scada.monitor.colorConfig.deviceType",
         type: "select",
         name: "deviceType",
         required: true,
         options: [
-            "分拣机",
-            "扫描设备",
-            "输送线"
+            {label: "scada.monitor.colorConfig.sorter", value: "分拣机"},
+            {label: "scada.monitor.colorConfig.scanner", value: "扫描设备"},
+            {label: "scada.monitor.colorConfig.conveyor", value: "输送线"}
         ]
     },
     {
-        label: "RGB颜色",
-        type: "input-text",
+        label: "scada.monitor.colorConfig.rgbColor",
+        type: "input-color",
         name: "rgb",
         required: true,
-        placeholder: "格式: rgb(255,255,255)"
+        format: "hex"
     },
     {
-        label: "描述",
+        label: "scada.monitor.colorConfig.description",
         type: "textarea",
         name: "description"
     },
     {
-        label: "图例显示",
+        label: "scada.monitor.colorConfig.legendVisible",
         type: "switch",
         name: "legendVisible",
         trueValue: true,
@@ -52,37 +52,39 @@ const crudColumns = [
         hidden: true
     },
     {
-        label: "设备状态",
+        label: "scada.monitor.colorConfig.deviceStatus",
         name: "deviceStatus",
         searchable: true
     },
     {
         name: "deviceType",
-        label: "设备类型",
+        label: "scada.monitor.colorConfig.deviceType",
         searchable: {
             type: "select",
             options: [
-                "分拣机",
-                "扫描设备",
-                "输送线"
+                {label: "scada.monitor.colorConfig.sorter", value: "分拣机"},
+                {label: "scada.monitor.colorConfig.scanner", value: "扫描设备"},
+                {label: "scada.monitor.colorConfig.conveyor", value: "输送线"}
             ]
         }
     },
     {
         name: "rgb",
-        label: "RGB颜色"
+        label: "scada.monitor.colorConfig.rgbColor",
+        type: "tpl",
+        tpl: '<span style="display:inline-flex;align-items:center;gap:6px;"><span style="display:inline-block;width:16px;height:16px;border-radius:3px;border:1px solid #ddd;background:${rgb};"></span>${rgb}</span>'
     },
     {
         name: "description",
-        label: "描述"
+        label: "scada.monitor.colorConfig.description"
     },
     {
         name: "legendVisible",
-        label: "图例显示",
+        label: "scada.monitor.colorConfig.legendVisible",
         type: "mapping",
         map: {
-            true: "显示",
-            false: "隐藏"
+            true: "scada.monitor.colorConfig.show",
+            false: "scada.monitor.colorConfig.hide"
         }
     }
 ];
@@ -90,7 +92,7 @@ const searchIdentity = "MColorConfig"
 
 const schema = {
     type: "page",
-    title: "颜色配置管理",
+    title: "scada.monitor.colorConfig.pageTitle",
     body: [
         {
             type: "crud",
@@ -145,10 +147,10 @@ const schema = {
             headerToolbar: [
                 {
                     type: "button",
-                    label: "新增",
+                    label: "button.add",
                     actionType: "drawer",
                     drawer: {
-                        title: "新增配置",
+                        title: "scada.monitor.colorConfig.addConfig",
                         body: {
                             type: "form",
                             api: scada_color_config_create,

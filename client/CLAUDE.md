@@ -100,6 +100,26 @@ npm start          # Alias for npm run dev
 - `historyApiFallback: true` enabled for SPA routing
 - Hot reload via React Refresh
 
+### Internationalization (i18n)
+
+- Translation files: `src/locales/zh-cn.json` (Chinese) and `src/locales/en-us.json` (English)
+- i18n config: `src/react-i18next-config.ts`, uses i18next + react-i18next + browser language detector
+- Key naming convention: dot-notation by module, e.g. `scada.monitor.alarmHistory.deviceNo`
+
+**amis schema pages (majority of pages):**
+- amis automatically translates `label`, `title`, `placeholder` etc. — just use the i18n key string directly
+- Example: `label: "interfacePlatform.interfaceManagement.table.interfaceCode"` — no `t()` or `${key | t}` needed
+- The `t` filter is registered via `registerFilter("t", ...)` in config, available as `${key | t}` for non-auto-translated fields if needed
+- Reference: `src/pages/api_platform/api_management.tsx`
+
+**React component pages (non-amis):**
+- Use `useTranslation()` hook (function components) or `withTranslation()` HOC (class components)
+- Call `t("key")` in JSX
+
+**ECharts 图表（注意）：**
+- amis 内嵌的 `type: "chart"` 组件中，ECharts config 的 `title.text`、`legend.data`、`series.name` 等属性 **不会** 被 amis replaceText 自动翻译
+- 如需图表国际化，需在构建 config 时手动调用 `i18n.t()` 或使用 `${key | t}` 模板语法
+
 ### State Management
 
 - MobX State Tree store at `src/stores/index.tsx`

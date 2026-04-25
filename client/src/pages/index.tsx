@@ -16,6 +16,7 @@ import Chatbot from "@/components/Chatbot"
 import style from "./index.module.scss"
 import classNames from "classnames/bind"
 import {Translation} from "react-i18next";
+import i18n from "@/react-i18next-config";
 
 const cx = classNames.bind(style)
 
@@ -104,7 +105,7 @@ class Admin extends React.Component<AdminProps, State> {
         const store = this.props.store
         const navigate = this.props.navigate
         if (!store.user.isAuthenticated) {
-            toast["error"]("用户未登陆，请先登陆！", "消息")
+            toast["error"](i18n.t("toast.notLoggedIn"), i18n.t("toast.message"))
             navigate(`/login`, { replace: true })
         }
         this.refreshMenu()
@@ -263,6 +264,7 @@ class Admin extends React.Component<AdminProps, State> {
                             </Routes>
                         )}
                     </Layout>
+                    {/* AI Chat - 暂时屏蔽
                     <Affix className={cx("fixButton")}>
                         <Button
                             type="text"
@@ -288,6 +290,7 @@ class Admin extends React.Component<AdminProps, State> {
                     >
                         <Chatbot/>
                     </Modal>
+                    */}
                 </>
             )
         }

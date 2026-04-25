@@ -10,16 +10,16 @@ const crudColumns = [
     },
     {
         name: "field1",
-        label: "日志类型",
+        label: "scada.log.logType",
         searchable: {
             type: "select",
             name: "field1",
             clearable: true,
             options: [
-                "收到货物上报",
-                "货物到达上报",
-                "目的地回复",
-                "目的地请求"
+                {label: "scada.log.logType.goodsReceived", value: "收到货物上报"},
+                {label: "scada.log.logType.goodsArrived", value: "货物到达上报"},
+                {label: "scada.log.logType.destReply", value: "目的地回复"},
+                {label: "scada.log.logType.destRequest", value: "目的地请求"}
             ],
             labelField: "label",
             valueField: "value"
@@ -27,40 +27,43 @@ const crudColumns = [
     },
     {
         name: "field2",
-        label: "业务类型",
+        label: "scada.log.businessType",
         searchable: {
             type: "select",
             clearable: true,
-            options: ["出库", "分拣"]
+            options: [
+                {label: "scada.log.businessType.outbound", value: "出库"},
+                {label: "scada.log.businessType.sorting", value: "分拣"}
+            ]
         }
     },
     {
         name: "field3",
-        label: "数据流向"
+        label: "scada.log.dataFlow"
     },
     {
         name: "field4",
-        label: "条码",
+        label: "scada.log.barcode",
         searchable: {
             type: "input-text",
-            placeholder: "请输入条码"
+            placeholder: "scada.log.barcode.placeholder"
         }
     },
     {
         name: "field5",
-        label: "实际地址"
+        label: "scada.log.actualAddress"
     },
     {
         name: "field6",
-        label: "BCR编号",
+        label: "scada.log.bcrNo",
         searchable: {
             type: "input-text",
-            placeholder: "请输入BCR编号"
+            placeholder: "scada.log.bcrNo.placeholder"
         }
     },
     {
         name: "field11",
-        label: "分拣结果",
+        label: "scada.log.sortingResult",
         searchable: {
             type: "select",
             clearable: true,
@@ -69,23 +72,23 @@ const crudColumns = [
     },
     {
         name: "field7",
-        label: "包裹号"
+        label: "scada.log.packageNo"
     },
     {
         name: "field8",
-        label: "设备编号"
+        label: "scada.log.deviceNo"
     },
     {
         name: "field9",
-        label: "高度"
+        label: "scada.log.height"
     },
     {
         name: "field10",
-        label: "DVC编号"
+        label: "scada.log.dvcNo"
     },
     {
         name: "field12",
-        label: "状态"
+        label: "scada.log.status"
     }
 ];
 
@@ -93,7 +96,7 @@ const searchIdentity = "MConveyorLog"; // 用于后端接口标识，请根据�
 
 const schema = {
     type: "page",
-    title: "WCS日志管理",
+    title: "scada.log.pageTitle",
     body: [
         {
             type: "crud",

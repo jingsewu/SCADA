@@ -8,7 +8,7 @@ const formBody = [
         name: "id"
     },
     {
-        label: "设备IP",
+        label: "scada.monitor.equipmentMonitor.deviceIp",
         type: "input-text",
         name: "deviceIp",
         required: true,
@@ -17,13 +17,13 @@ const formBody = [
         }
     },
     {
-        label: "设备名称",
+        label: "scada.monitor.equipmentMonitor.deviceName",
         type: "input-text",
         name: "deviceName",
         required: true
     },
     {
-        label: "设备类型",
+        label: "scada.monitor.equipmentMonitor.deviceType",
         type: "select",
         name: "deviceType",
         required: true,
@@ -36,19 +36,19 @@ const formBody = [
         ]
     },
     {
-        label: "备注",
+        label: "scada.monitor.equipmentMonitor.remark",
         type: "textarea",
         name: "remark"
     },
     {
-        label: "在线状态",
+        label: "scada.monitor.equipmentMonitor.onlineStatus",
         type: "switch",
         name: "online",
         trueValue: true,
         falseValue: false
     },
     {
-        label: "最后心跳时间",
+        label: "scada.monitor.equipmentMonitor.lastPingTime",
         type: "datetime",
         name: "lastPingTime",
         format: "YYYY-MM-DD HH:mm:ss",
@@ -64,17 +64,17 @@ const crudColumns = [
     },
     {
         name: "deviceIp",
-        label: "设备IP",
+        label: "scada.monitor.equipmentMonitor.deviceIp",
         searchable: true
     },
     {
         name: "deviceName",
-        label: "设备名称",
+        label: "scada.monitor.equipmentMonitor.deviceName",
         searchable: true
     },
     {
         name: "deviceType",
-        label: "设备类型",
+        label: "scada.monitor.equipmentMonitor.deviceType",
         searchable: {
             type: "select",
             options: [
@@ -88,17 +88,17 @@ const crudColumns = [
     },
     {
         name: "online",
-        label: "在线状态"
+        label: "scada.monitor.equipmentMonitor.onlineStatus"
     },
     {
         name: "lastPingTime",
-        label: "最后心跳",
+        label: "scada.monitor.equipmentMonitor.lastPingTime",
         type: "datetime",
         format: "YYYY-MM-DD HH:mm:ss"
     },
     {
         name: "remark",
-        label: "备注",
+        label: "scada.monitor.equipmentMonitor.remark",
         type: "text"
     }
 ];
@@ -107,7 +107,7 @@ const searchIdentity = "MDeviceMonitor"
 
 const schema = {
     type: "page",
-    title: "设备监控管理",
+    title: "scada.monitor.equipmentMonitor.pageTitle",
     body: [
         {
             type: "crud",
@@ -124,15 +124,15 @@ const schema = {
             columns: [...crudColumns,
                 {
                     type: "operation",
-                    label: "操作",
+                    label: "table.operation",
                     width: 230,
                     buttons: [
                         {
-                            label: "修改",
+                            label: "button.modify",
                             type: "button",
                             actionType: "drawer",
                             drawer: {
-                                title: "修改设备信息",
+                                title: "scada.monitor.equipmentMonitor.editDevice",
                                 closeOnEsc: true,
                                 closeOnOutside: true,
                                 body: {
@@ -143,12 +143,12 @@ const schema = {
                             }
                         },
                         {
-                            label: "删除",
+                            label: "button.delete",
                             type: "button",
                             actionType: "ajax",
                             level: "danger",
-                            confirmText: "确定要删除该设备吗？",
-                            confirmTitle: "删除确认",
+                            confirmText: "toast.sureDelete",
+                            confirmTitle: "button.delete",
                             api: device_monitor_delete,
                             reload: "DeviceMonitorTable"
                         }
@@ -158,10 +158,10 @@ const schema = {
             headerToolbar: [
                 {
                     type: "button",
-                    label: "新增设备",
+                    label: "scada.monitor.equipmentMonitor.addDevice",
                     actionType: "drawer",
                     drawer: {
-                        title: "新增设备",
+                        title: "scada.monitor.equipmentMonitor.addDevice",
                         body: {
                             type: "form",
                             api: device_monitor_create,

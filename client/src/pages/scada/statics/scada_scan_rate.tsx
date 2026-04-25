@@ -5,19 +5,18 @@ const searchIdentity = "ScanRateStatistic"; // 请根据实际情况修改
 
 const schema = {
     type: "page",
-    title: "扫码率统计",
+    title: "scada.statics.scanRate.pageTitle",
     body: [
         {
             type: "form",
-            title: "筛选条件",
+            title: "scada.statics.scanRate.filterConditions",
             mode: "horizontal",
-            wrapWithPanel: false,
             className: "m-b-md",
             body: [
                 {
                     type: "select",
                     name: "plcCabinet",
-                    label: "PLC柜",
+                    label: "scada.statics.scanRate.plcCabinet",
                     value: "PLC2",
                     clearable: false,
                     options: [
@@ -29,13 +28,13 @@ const schema = {
                 {
                     type: "input-text",
                     name: "scannerNo",
-                    label: "扫码器",
-                    placeholder: "请输入扫码器"
+                    label: "scada.statics.scanRate.scanner",
+                    placeholder: "scada.statics.scanRate.scanner.placeholder"
                 },
                 {
                     type: "input-datetime-range",
                     name: "queryTime",
-                    label: "查询时间",
+                    label: "scada.statics.scanRate.queryTime",
                     value: "2025-03-13 00:00:00,2025-03-14 00:00:00",
                     format: "YYYY-MM-DD HH:mm:ss",
                     inputFormat: "YYYY-MM-DD HH:mm:ss"
@@ -44,21 +43,21 @@ const schema = {
             actions: [
                 {
                     type: "button",
-                    label: "搜索",
+                    label: "button.search",
                     actionType: "submit",
                     level: "primary"
                 },
                 {
                     type: "button",
-                    label: "重置",
+                    label: "button.reset",
                     actionType: "reset"
                 },
                 {
                     type: "button",
-                    label: "数据列表",
+                    label: "scada.statics.scanRate.dataList",
                     actionType: "dialog",
                     dialog: {
-                        title: "扫码率数据列表",
+                        title: "scada.statics.scanRate.dataList",
                         size: "lg",
                         body: {
                             type: "service",
@@ -74,25 +73,25 @@ const schema = {
                                 columns: [
                                     {
                                         name: "scannerNo",
-                                        label: "扫码器编号"
+                                        label: "scada.statics.scanRate.scannerNo"
                                     },
                                     {
                                         name: "scanRate",
-                                        label: "扫码率",
+                                        label: "scada.statics.scanRate.scanRate",
                                         type: "tpl",
                                         tpl: "${scanRate}%"
                                     },
                                     {
                                         name: "totalCount",
-                                        label: "总数量"
+                                        label: "scada.statics.scanRate.totalCount"
                                     },
                                     {
                                         name: "successCount",
-                                        label: "成功数量"
+                                        label: "scada.statics.scanRate.successCount"
                                     },
                                     {
                                         name: "createTime",
-                                        label: "统计时间"
+                                        label: "scada.statics.scanRate.statisticTime"
                                     }
                                 ]
                             }
@@ -109,7 +108,7 @@ const schema = {
                     body: {
                         type: "card",
                         header: {
-                            title: "平均扫码率"
+                            title: "scada.statics.scanRate.avgScanRate"
                         },
                         body: {
                             type: "tpl",
@@ -122,7 +121,7 @@ const schema = {
                     body: {
                         type: "card",
                         header: {
-                            title: "最高扫码率"
+                            title: "scada.statics.scanRate.maxScanRate"
                         },
                         body: {
                             type: "tpl",
@@ -135,7 +134,7 @@ const schema = {
                     body: {
                         type: "card",
                         header: {
-                            title: "最低扫码率"
+                            title: "scada.statics.scanRate.minScanRate"
                         },
                         body: {
                             type: "tpl",
@@ -148,7 +147,7 @@ const schema = {
                     body: {
                         type: "card",
                         header: {
-                            title: "统计扫码器数"
+                            title: "scada.statics.scanRate.scannerCount"
                         },
                         body: {
                             type: "tpl",
