@@ -15,7 +15,7 @@ const baseRouter = [
     {
         path: "/",
         // component: lazy(() => import("@/pages/Login"))
-        component: lazy(() => import("@/pages/scada/monitor/alarm_history"))
+        component: lazy(() => import("@/pages/scada/monitor/ConnectedRectangles"))
     },
     {
         path: "/login",
