@@ -11,4 +11,9 @@
         <sqlFile path="classpath:db/sql/init/user/init_menu.sql"/>
     </changeSet>
 
+    <!-- SCADA menu entries -->
+    <changeSet id="init-scada-menu" author="Kinser">
+        <sqlFile path="classpath:db/sql/init/user/init_scada_menu.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
