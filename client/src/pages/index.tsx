@@ -78,7 +78,7 @@ export default class Admin extends React.Component<AdminProps, State> {
         const options = menuList.map((menu) => {
             return {
                 key: menu,
-                label: (this.state.menus as any)[menu].title
+                label: <Translation>{(t) => t((this.state.menus as any)[menu].title)}</Translation>
             }
         })
         if (this.state.iframeShow) {
