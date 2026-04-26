@@ -70,8 +70,12 @@ const store = ((window as any).store = MainStore.create(
             data,
             responseType,
             config,
-            headers
+            headers,
+            mock
         }: any) => {
+            if (mock) {
+                return Promise.resolve(mock)
+            }
             config = config || {}
             config.headers = config.headers || {}
             config.withCredentials = true

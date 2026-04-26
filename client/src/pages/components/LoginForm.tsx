@@ -46,7 +46,7 @@ class LoginForm extends React.Component<any> {
                     content: t("toast.loginSuccess"),
                 });
                 // Navigate to the dashboard
-                history.replace(`/dashboard`);
+                history.replace(`/scada/monitor/equipment-scada`);
             } else {
                 // toast["error"]("Login failed", "Message");
             }

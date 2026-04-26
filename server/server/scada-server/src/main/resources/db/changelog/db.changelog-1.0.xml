@@ -16,4 +16,9 @@
         <sqlFile path="classpath:db/sql/init/user/init_scada_menu.sql"/>
     </changeSet>
 
+    <!-- Migrate SCADA menu titles from Chinese to i18n keys -->
+    <changeSet id="migrate-scada-menu-i18n" author="Kinser">
+        <sqlFile path="classpath:db/sql/init/user/migrate_scada_menu_i18n.sql"/>
+    </changeSet>
+
 </databaseChangeLog>

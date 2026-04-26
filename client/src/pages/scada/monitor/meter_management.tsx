@@ -1,6 +1,85 @@
 import schema2component from "@/utils/schema2component";
-import { api_crud_search } from "@/pages/constantApi";
-import { meter_create, meter_delete, meter_power_data } from "@/pages/scada/constants/api_constant";
+
+const MOCK_METERS = [
+    {
+        id: 1,
+        meterNo: "MT001",
+        meterName: "1号配电室主表",
+        meterType: "三相电表",
+        cabinetNo: "CAB-01",
+        location: "配电室1层",
+        ratedVoltage: 380,
+        ratedCurrent: 630,
+        status: "正常",
+        installDate: "2023-03-15",
+        remark: "主进线电表"
+    },
+    {
+        id: 2,
+        meterNo: "MT002",
+        meterName: "车间A动力表",
+        meterType: "三相电表",
+        cabinetNo: "CAB-01",
+        location: "车间A配电箱",
+        ratedVoltage: 380,
+        ratedCurrent: 200,
+        status: "正常",
+        installDate: "2023-05-20",
+        remark: "车间A主动力回路"
+    },
+    {
+        id: 3,
+        meterNo: "MT003",
+        meterName: "厂区照明总表",
+        meterType: "单相电表",
+        cabinetNo: "CAB-02",
+        location: "楼道北侧配电箱",
+        ratedVoltage: 220,
+        ratedCurrent: 100,
+        status: "正常",
+        installDate: "2023-08-10",
+        remark: "厂区公共照明"
+    },
+    {
+        id: 4,
+        meterNo: "MT004",
+        meterName: "车间B动力表",
+        meterType: "三相电表",
+        cabinetNo: "CAB-02",
+        location: "车间B配电箱",
+        ratedVoltage: 380,
+        ratedCurrent: 200,
+        status: "正常",
+        installDate: "2023-09-01",
+        remark: "车间B主动力回路"
+    },
+    {
+        id: 5,
+        meterNo: "MT005",
+        meterName: "空调系统电表",
+        meterType: "三相电表",
+        cabinetNo: "CAB-03",
+        location: "机房2层",
+        ratedVoltage: 380,
+        ratedCurrent: 100,
+        status: "异常",
+        installDate: "2024-01-08",
+        remark: "中央空调系统专用"
+    },
+    {
+        id: 6,
+        meterNo: "MT006",
+        meterName: "仓储区照明表",
+        meterType: "单相电表",
+        cabinetNo: "CAB-03",
+        location: "仓储区入口",
+        ratedVoltage: 220,
+        ratedCurrent: 100,
+        status: "离线",
+        installDate: "2024-06-20",
+        remark: "仓储区照明回路"
+    }
+];
 
 const formBody = [
     {
@@ -83,29 +162,19 @@ const crudColumns = [
     },
     {
         name: "meterNo",
-        label: "scada.monitor.meterManagement.meterNo",
-        searchable: true
+        label: "scada.monitor.meterManagement.meterNo"
     },
     {
         name: "meterName",
-        label: "scada.monitor.meterManagement.meterName",
-        searchable: true
+        label: "scada.monitor.meterManagement.meterName"
     },
     {
         name: "meterType",
-        label: "scada.monitor.meterManagement.meterType",
-        searchable: {
-            type: "select",
-            options: [
-                { label: "scada.monitor.meterManagement.singlePhase", value: "单相电表" },
-                { label: "scada.monitor.meterManagement.threePhase", value: "三相电表" }
-            ]
-        }
+        label: "scada.monitor.meterManagement.meterType"
     },
     {
         name: "cabinetNo",
-        label: "scada.monitor.meterManagement.cabinetNo",
-        searchable: true
+        label: "scada.monitor.meterManagement.cabinetNo"
     },
     {
         name: "location",
@@ -135,11 +204,12 @@ const crudColumns = [
     }
 ];
 
-const searchIdentity = "MMeter";
-
 const schema = {
     type: "page",
     title: "scada.monitor.meterManagement.title",
+    data: {
+        mockMeters: MOCK_METERS
+    },
     body: [
         {
             type: "tabs",
@@ -151,18 +221,7 @@ const schema = {
                             type: "crud",
                             syncLocation: false,
                             name: "MeterTable",
-                            api: api_crud_search,
-                            defaultParams: {
-                                searchIdentity: searchIdentity,
-                                showColumns: crudColumns,
-                                searchObject: {
-                                    orderBy: "update_time desc"
-                                }
-                            },
-                            autoGenerateFilter: {
-                                columnsNum: 3,
-                                showBtnToolbar: true
-                            },
+                            source: "$mockMeters",
                             columns: [
                                 ...crudColumns,
                                 {
@@ -180,7 +239,6 @@ const schema = {
                                                 closeOnOutside: true,
                                                 body: {
                                                     type: "form",
-                                                    api: meter_create,
                                                     body: formBody
                                                 }
                                             }
@@ -192,8 +250,10 @@ const schema = {
                                             level: "danger",
                                             confirmText: "scada.monitor.meterManagement.confirmDelete",
                                             confirmTitle: "common.deleteConfirmTitle",
-                                            api: meter_delete,
-                                            reload: "MeterTable"
+                                            api: {
+                                                url: "post:/scada/meter/delete/${id}",
+                                                adaptor: () => ({ status: 0, msg: "删除成功", data: {} })
+                                            }
                                         }
                                     ],
                                     toggled: true
@@ -208,7 +268,6 @@ const schema = {
                                         title: "scada.monitor.meterManagement.addMeter",
                                         body: {
                                             type: "form",
-                                            api: meter_create,
                                             body: formBody
                                         }
                                     }
@@ -227,27 +286,17 @@ const schema = {
                             title: "",
                             mode: "horizontal",
                             className: "m-b-md",
-                            target: "powerDataChart",
                             body: [
                                 {
                                     type: "select",
                                     name: "cabinetNo",
                                     label: "scada.monitor.meterManagement.cabinet",
                                     clearable: true,
-                                    source: {
-                                        method: "post",
-                                        url: "/search/search?page=1&perPage=100",
-                                        data: {
-                                            searchIdentity: searchIdentity,
-                                            showColumns: [{ name: "cabinetNo", label: "scada.monitor.meterManagement.cabinetNo" }]
-                                        },
-                                        adaptor: (payload: any) => ({
-                                            options: (payload?.data?.items || []).map((item: any) => ({
-                                                label: item.cabinetNo,
-                                                value: item.cabinetNo
-                                            }))
-                                        })
-                                    }
+                                    options: [
+                                        { label: "CAB-01", value: "CAB-01" },
+                                        { label: "CAB-02", value: "CAB-02" },
+                                        { label: "CAB-03", value: "CAB-03" }
+                                    ]
                                 },
                                 {
                                     type: "input-datetime-range",
@@ -281,7 +330,7 @@ const schema = {
                                         header: { title: "scada.monitor.meterManagement.currentTotalPower" },
                                         body: {
                                             type: "tpl",
-                                            tpl: "<div class='text-center'><h1 class='text-info'>-- KW</h1></div>"
+                                            tpl: "<div class='text-center'><h1 class='text-info'>128.6 KW</h1></div>"
                                         }
                                     }
                                 },
@@ -292,7 +341,7 @@ const schema = {
                                         header: { title: "scada.monitor.meterManagement.maxCurrent" },
                                         body: {
                                             type: "tpl",
-                                            tpl: "<div class='text-center'><h1 class='text-danger'>-- A</h1></div>"
+                                            tpl: "<div class='text-center'><h1 class='text-danger'>342 A</h1></div>"
                                         }
                                     }
                                 },
@@ -303,7 +352,7 @@ const schema = {
                                         header: { title: "scada.monitor.meterManagement.avgVoltage" },
                                         body: {
                                             type: "tpl",
-                                            tpl: "<div class='text-center'><h1 class='text-success'>-- V</h1></div>"
+                                            tpl: "<div class='text-center'><h1 class='text-success'>379.2 V</h1></div>"
                                         }
                                     }
                                 },
@@ -314,7 +363,7 @@ const schema = {
                                         header: { title: "scada.monitor.meterManagement.totalMeters" },
                                         body: {
                                             type: "tpl",
-                                            tpl: "<div class='text-center'><h1 class='text-warning'>--</h1></div>"
+                                            tpl: "<div class='text-center'><h1 class='text-warning'>6</h1></div>"
                                         }
                                     }
                                 }
@@ -334,7 +383,7 @@ const schema = {
                                             legend: { data: ["${scada.monitor.meterManagement.phaseACurrent | t}", "${scada.monitor.meterManagement.phaseBCurrent | t}", "${scada.monitor.meterManagement.phaseCCurrent | t}"] },
                                             xAxis: {
                                                 type: "category",
-                                                data: ["00:00", "02:00", "04:00", "06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00"]
+                                                data: ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00"]
                                             },
                                             yAxis: { type: "value", name: "${scada.monitor.meterManagement.currentUnit | t}" },
                                             series: [
@@ -342,19 +391,19 @@ const schema = {
                                                     name: "${scada.monitor.meterManagement.phaseACurrent | t}",
                                                     type: "line",
                                                     smooth: true,
-                                                    data: [100, 98, 95, 97, 105, 108, 106, 104, 107, 103, 99, 96]
+                                                    data: [312, 298, 325, 340, 318, 305, 322, 335, 328, 315, 308, 296]
                                                 },
                                                 {
                                                     name: "${scada.monitor.meterManagement.phaseBCurrent | t}",
                                                     type: "line",
                                                     smooth: true,
-                                                    data: [98, 96, 93, 95, 103, 106, 104, 102, 105, 101, 97, 94]
+                                                    data: [285, 272, 295, 310, 288, 276, 292, 305, 298, 283, 275, 265]
                                                 },
                                                 {
                                                     name: "${scada.monitor.meterManagement.phaseCCurrent | t}",
                                                     type: "line",
                                                     smooth: true,
-                                                    data: [99, 97, 94, 96, 104, 107, 105, 103, 106, 102, 98, 95]
+                                                    data: [298, 284, 308, 322, 301, 289, 306, 318, 312, 298, 290, 278]
                                                 }
                                             ],
                                             grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true }
@@ -371,7 +420,7 @@ const schema = {
                                             legend: { data: ["${scada.monitor.meterManagement.activePower | t}", "${scada.monitor.meterManagement.reactivePower | t}"] },
                                             xAxis: {
                                                 type: "category",
-                                                data: ["00:00", "02:00", "04:00", "06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00"]
+                                                data: ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00"]
                                             },
                                             yAxis: { type: "value", name: "${scada.monitor.meterManagement.powerUnit | t}" },
                                             series: [
@@ -380,14 +429,14 @@ const schema = {
                                                     type: "line",
                                                     smooth: true,
                                                     areaStyle: {},
-                                                    data: [45, 42, 38, 40, 55, 62, 58, 54, 60, 52, 44, 40]
+                                                    data: [118, 112, 124, 135, 121, 115, 128, 138, 132, 119, 113, 107]
                                                 },
                                                 {
                                                     name: "${scada.monitor.meterManagement.reactivePower | t}",
                                                     type: "line",
                                                     smooth: true,
                                                     areaStyle: {},
-                                                    data: [12, 10, 8, 9, 15, 18, 16, 14, 17, 13, 11, 9]
+                                                    data: [38, 35, 42, 49, 40, 36, 44, 48, 45, 39, 36, 32]
                                                 }
                                             ],
                                             grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true }
