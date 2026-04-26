@@ -1,7 +1,25 @@
 import schema2component from "@/utils/schema2component";
-import { api_crud_search } from "@/pages/constantApi";
-import { network_device_create, network_device_delete, network_device_topology } from "@/pages/scada/constants/api_constant";
+import { network_device_create, network_device_delete } from "@/pages/scada/constants/api_constant";
 import i18n from "i18next";
+
+// TODO: mock data — remove when backend ready, restore api calls
+const MOCK_DEVICES = [
+    { id: 1,  deviceNo: "SERVER-01", deviceName: "SCADA主服务器",  deviceType: "服务器", ipAddress: "192.168.1.1",  pnStation: null, parentDevice: null,       connectionType: null,       online: true,  lastHeartbeat: "2026-04-26 08:00:00", remark: null },
+    { id: 2,  deviceNo: "SW-01",     deviceName: "核心交换机",     deviceType: "交换机", ipAddress: "192.168.1.2",  pnStation: null, parentDevice: "SERVER-01", connectionType: "Ethernet", online: true,  lastHeartbeat: "2026-04-26 08:00:05", remark: null },
+    { id: 3,  deviceNo: "PLC-01",    deviceName: "一区PLC",        deviceType: "PLC",    ipAddress: "192.168.1.10", pnStation: "1",  parentDevice: "SW-01",     connectionType: "Profinet", online: true,  lastHeartbeat: "2026-04-26 08:00:10", remark: null },
+    { id: 4,  deviceNo: "PLC-02",    deviceName: "二区PLC",        deviceType: "PLC",    ipAddress: "192.168.1.11", pnStation: "2",  parentDevice: "SW-01",     connectionType: "Profinet", online: true,  lastHeartbeat: "2026-04-26 08:00:11", remark: null },
+    { id: 5,  deviceNo: "PLC-03",    deviceName: "三区PLC",        deviceType: "PLC",    ipAddress: "192.168.1.12", pnStation: "3",  parentDevice: "SW-01",     connectionType: "Profinet", online: false, lastHeartbeat: "2026-04-26 06:32:00", remark: "离线维修中" },
+    { id: 6,  deviceNo: "GW-01",     deviceName: "一区Profinet网关", deviceType: "网关", ipAddress: "192.168.1.20", pnStation: "11", parentDevice: "PLC-01",    connectionType: "Profinet", online: true,  lastHeartbeat: "2026-04-26 08:00:12", remark: null },
+    { id: 7,  deviceNo: "GW-02",     deviceName: "二区Profinet网关", deviceType: "网关", ipAddress: "192.168.1.21", pnStation: "21", parentDevice: "PLC-02",    connectionType: "Profinet", online: true,  lastHeartbeat: "2026-04-26 08:00:13", remark: null },
+    { id: 8,  deviceNo: "SCAN-01",   deviceName: "入库口扫码器",   deviceType: "扫码器", ipAddress: "192.168.1.30", pnStation: "12", parentDevice: "PLC-01",    connectionType: "Profinet", online: true,  lastHeartbeat: "2026-04-26 08:00:15", remark: null },
+    { id: 9,  deviceNo: "SCAN-02",   deviceName: "分拣口扫码器",   deviceType: "扫码器", ipAddress: "192.168.1.31", pnStation: "13", parentDevice: "PLC-01",    connectionType: "Profinet", online: true,  lastHeartbeat: "2026-04-26 08:00:15", remark: null },
+    { id: 10, deviceNo: "SCAN-03",   deviceName: "出库口扫码器",   deviceType: "扫码器", ipAddress: "192.168.1.32", pnStation: "22", parentDevice: "PLC-02",    connectionType: "Profinet", online: true,  lastHeartbeat: "2026-04-26 08:00:16", remark: null },
+    { id: 11, deviceNo: "SCAN-04",   deviceName: "复核台扫码器",   deviceType: "扫码器", ipAddress: "192.168.1.33", pnStation: "23", parentDevice: "PLC-02",    connectionType: "Profinet", online: false, lastHeartbeat: "2026-04-26 07:15:00", remark: null },
+    { id: 12, deviceNo: "SCAN-05",   deviceName: "三区扫码器",     deviceType: "扫码器", ipAddress: "192.168.1.34", pnStation: "31", parentDevice: "PLC-03",    connectionType: "Profinet", online: null,  lastHeartbeat: null,                  remark: null },
+    { id: 13, deviceNo: "VFD-01",    deviceName: "一区输送机变频器", deviceType: "变频器", ipAddress: "192.168.1.40", pnStation: "14", parentDevice: "PLC-01",    connectionType: "Profibus", online: true,  lastHeartbeat: "2026-04-26 08:00:20", remark: null },
+    { id: 14, deviceNo: "VFD-02",    deviceName: "二区输送机变频器A", deviceType: "变频器", ipAddress: "192.168.1.41", pnStation: "24", parentDevice: "PLC-02",    connectionType: "Profibus", online: true,  lastHeartbeat: "2026-04-26 08:00:21", remark: null },
+    { id: 15, deviceNo: "VFD-03",    deviceName: "二区输送机变频器B", deviceType: "变频器", ipAddress: "192.168.1.42", pnStation: "25", parentDevice: "PLC-02",    connectionType: "Profibus", online: true,  lastHeartbeat: "2026-04-26 08:00:21", remark: null }
+];
 
 const formBody = [
     {
@@ -142,8 +160,6 @@ const crudColumns = [
     }
 ];
 
-const searchIdentity = "MNetworkDevice";
-
 const schema = {
     type: "page",
     title: "scada.monitor.networkTopology.title",
@@ -154,37 +170,67 @@ const schema = {
                 {
                     title: "scada.monitor.networkTopology.deviceList",
                     body: [
+                        // TODO: mock — remove service wrapper + restore crud api/defaultParams when backend ready
                         {
-                            type: "crud",
-                            syncLocation: false,
-                            name: "NetworkDeviceTable",
-                            api: api_crud_search,
-                            defaultParams: {
-                                searchIdentity: searchIdentity,
-                                showColumns: crudColumns,
-                                searchObject: {
-                                    orderBy: "update_time desc"
-                                }
+                            type: "service",
+                            data: {
+                                items: MOCK_DEVICES,
+                                total: MOCK_DEVICES.length,
+                                count: MOCK_DEVICES.length
                             },
-                            autoGenerateFilter: {
-                                columnsNum: 3,
-                                showBtnToolbar: true
-                            },
-                            columns: [
-                                ...crudColumns,
+                            body: [
                                 {
-                                    type: "operation",
-                                    label: "common.operation",
-                                    width: 230,
-                                    buttons: [
+                                    type: "crud",
+                                    syncLocation: false,
+                                    name: "NetworkDeviceTable",
+                                    source: "${items}",
+                                    autoGenerateFilter: {
+                                        columnsNum: 3,
+                                        showBtnToolbar: true
+                                    },
+                                    columns: [
+                                        ...crudColumns,
                                         {
-                                            label: "button.modify",
+                                            type: "operation",
+                                            label: "common.operation",
+                                            width: 230,
+                                            buttons: [
+                                                {
+                                                    label: "button.modify",
+                                                    type: "button",
+                                                    actionType: "drawer",
+                                                    drawer: {
+                                                        title: "scada.monitor.networkTopology.editDevice",
+                                                        closeOnEsc: true,
+                                                        closeOnOutside: true,
+                                                        body: {
+                                                            type: "form",
+                                                            api: network_device_create,
+                                                            body: formBody
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    label: "button.delete",
+                                                    type: "button",
+                                                    actionType: "ajax",
+                                                    level: "danger",
+                                                    confirmText: "scada.monitor.networkTopology.confirmDelete",
+                                                    confirmTitle: "common.deleteConfirmTitle",
+                                                    api: network_device_delete,
+                                                    reload: "NetworkDeviceTable"
+                                                }
+                                            ],
+                                            toggled: true
+                                        }
+                                    ],
+                                    headerToolbar: [
+                                        {
                                             type: "button",
+                                            label: "scada.monitor.networkTopology.addDevice",
                                             actionType: "drawer",
                                             drawer: {
-                                                title: "scada.monitor.networkTopology.editDevice",
-                                                closeOnEsc: true,
-                                                closeOnOutside: true,
+                                                title: "scada.monitor.networkTopology.addDeviceDrawer",
                                                 body: {
                                                     type: "form",
                                                     api: network_device_create,
@@ -192,36 +238,10 @@ const schema = {
                                                 }
                                             }
                                         },
-                                        {
-                                            label: "button.delete",
-                                            type: "button",
-                                            actionType: "ajax",
-                                            level: "danger",
-                                            confirmText: "scada.monitor.networkTopology.confirmDelete",
-                                            confirmTitle: "common.deleteConfirmTitle",
-                                            api: network_device_delete,
-                                            reload: "NetworkDeviceTable"
-                                        }
-                                    ],
-                                    toggled: true
+                                        "export-excel",
+                                        "reload"
+                                    ]
                                 }
-                            ],
-                            headerToolbar: [
-                                {
-                                    type: "button",
-                                    label: "scada.monitor.networkTopology.addDevice",
-                                    actionType: "drawer",
-                                    drawer: {
-                                        title: "scada.monitor.networkTopology.addDeviceDrawer",
-                                        body: {
-                                            type: "form",
-                                            api: network_device_create,
-                                            body: formBody
-                                        }
-                                    }
-                                },
-                                "export-excel",
-                                "reload"
                             ]
                         }
                     ]
@@ -229,9 +249,10 @@ const schema = {
                 {
                     title: "scada.monitor.networkTopology.topologyTab",
                     body: [
+                        // TODO: mock — replace data with api: network_device_topology when backend ready
                         {
                             type: "service",
-                            api: network_device_topology,
+                            data: { items: MOCK_DEVICES },
                             body: [
                                 {
                                     type: "custom",
