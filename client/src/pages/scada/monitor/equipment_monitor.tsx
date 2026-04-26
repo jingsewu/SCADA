@@ -1,6 +1,18 @@
 import schema2component from "@/utils/schema2component";
 import {api_crud_search} from "@/pages/constantApi";
-import {device_monitor_create, device_monitor_delete} from "@/pages/scada/constants/api_constant";
+
+// ===== Mock 数据（临时，后端就绪后移除）=====
+const MOCK_SUCCESS = { status: 200, data: { status: 0, msg: "操作成功" } };
+const DEVICE_MOCK_ITEMS = [
+    { id: 1, deviceIp: "192.168.1.101", deviceName: "主控PLC", deviceType: "PLC", online: true, lastPingTime: "2026-04-26 10:05:00", remark: "主线控制器" },
+    { id: 2, deviceIp: "192.168.1.102", deviceName: "操作员HMI", deviceType: "HMI", online: true, lastPingTime: "2026-04-26 10:04:30", remark: "" },
+    { id: 3, deviceIp: "192.168.1.110", deviceName: "温度传感器组", deviceType: "Sensor", online: false, lastPingTime: "2026-04-26 09:15:00", remark: "库区A温湿度监控" },
+    { id: 4, deviceIp: "192.168.1.120", deviceName: "现场总线网关", deviceType: "Gateway", online: true, lastPingTime: "2026-04-26 10:05:00", remark: "Modbus转以太网" },
+    { id: 5, deviceIp: "192.168.1.130", deviceName: "AGV控制RTU", deviceType: "RTU", online: true, lastPingTime: "2026-04-26 10:03:00", remark: "" }
+];
+const mock_crud_device = { ...api_crud_search, mock: { status: 200, data: { status: 0, data: { items: DEVICE_MOCK_ITEMS, total: DEVICE_MOCK_ITEMS.length } } } };
+const mock_device_create = { method: "post", url: "/scada/device-monitor/createOrUpdate", mock: MOCK_SUCCESS };
+const mock_device_delete = { method: "post", url: "/scada/device-monitor/delete/${id}", mock: MOCK_SUCCESS };
 
 const formBody = [
     {
@@ -113,7 +125,7 @@ const schema = {
             type: "crud",
             syncLocation: false,
             name: "DeviceMonitorTable",
-            api: api_crud_search,
+            api: mock_crud_device,
             defaultParams: {
                 searchIdentity: searchIdentity,
                 showColumns: crudColumns,
@@ -137,7 +149,7 @@ const schema = {
                                 closeOnOutside: true,
                                 body: {
                                     type: "form",
-                                    api: device_monitor_create,
+                                    api: mock_device_create,
                                     body: formBody
                                 }
                             }
@@ -149,7 +161,7 @@ const schema = {
                             level: "danger",
                             confirmText: "toast.sureDelete",
                             confirmTitle: "button.delete",
-                            api: device_monitor_delete,
+                            api: mock_device_delete,
                             reload: "DeviceMonitorTable"
                         }
                     ],
@@ -164,7 +176,7 @@ const schema = {
                         title: "scada.monitor.equipmentMonitor.addDevice",
                         body: {
                             type: "form",
-                            api: device_monitor_create,
+                            api: mock_device_create,
                             body: formBody
                         }
                     }
