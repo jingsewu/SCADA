@@ -1,7 +1,5 @@
 import schema2component from "@/utils/schema2component";
-import { api_crud_search } from "@/pages/constantApi";
-
-const searchIdentity = "ScanRateStatistic"; // 请根据实际情况修改
+import i18n from "i18next";
 
 const schema = {
     type: "page",
@@ -51,52 +49,6 @@ const schema = {
                     type: "button",
                     label: "button.reset",
                     actionType: "reset"
-                },
-                {
-                    type: "button",
-                    label: "scada.statics.scanRate.dataList",
-                    actionType: "dialog",
-                    dialog: {
-                        title: "scada.statics.scanRate.dataList",
-                        size: "lg",
-                        body: {
-                            type: "service",
-                            api: {
-                                ...api_crud_search,
-                                adapt: (payload:any) => ({
-                                    ...payload,
-                                    searchIdentity: searchIdentity
-                                })
-                            },
-                            body: {
-                                type: "table",
-                                columns: [
-                                    {
-                                        name: "scannerNo",
-                                        label: "scada.statics.scanRate.scannerNo"
-                                    },
-                                    {
-                                        name: "scanRate",
-                                        label: "scada.statics.scanRate.scanRate",
-                                        type: "tpl",
-                                        tpl: "${scanRate}%"
-                                    },
-                                    {
-                                        name: "totalCount",
-                                        label: "scada.statics.scanRate.totalCount"
-                                    },
-                                    {
-                                        name: "successCount",
-                                        label: "scada.statics.scanRate.successCount"
-                                    },
-                                    {
-                                        name: "createTime",
-                                        label: "scada.statics.scanRate.statisticTime"
-                                    }
-                                ]
-                            }
-                        }
-                    }
                 }
             ]
         },
@@ -160,20 +112,20 @@ const schema = {
         {
             type: "card",
             header: {
-                title: "扫码率统计图表"
+                title: "scada.statics.scanRate.chart.cardTitle"
             },
             body: {
                 type: "chart",
                 config: {
                     title: {
-                        text: "扫码率统计"
+                        text: i18n.t("scada.statics.scanRate.pageTitle")
                     },
                     tooltip: {
                         trigger: "axis",
                         formatter: "{b}<br/>{a}: {c}%"
                     },
                     legend: {
-                        data: ["扫码率"]
+                        data: [i18n.t("scada.statics.scanRate.scanRate")]
                     },
                     xAxis: {
                         type: "category",
@@ -189,7 +141,7 @@ const schema = {
                     },
                     series: [
                         {
-                            name: "扫码率",
+                            name: i18n.t("scada.statics.scanRate.scanRate"),
                             type: "bar",
                             data: [99.91, 99.64, 99.9, 99.79, 99.89, 99.46, 99.61, 99.55, 99.02, 99.33, 99.76, 99.89],
                             itemStyle: {
@@ -220,13 +172,16 @@ const schema = {
                         type: "chart",
                         config: {
                             title: {
-                                text: "扫码器对比"
+                                text: i18n.t("scada.statics.scanRate.chart.scannerCompare")
                             },
                             tooltip: {
                                 trigger: "axis"
                             },
                             legend: {
-                                data: ["总数量", "成功数量"]
+                                data: [
+                                    i18n.t("scada.statics.scanRate.totalCount"),
+                                    i18n.t("scada.statics.scanRate.successCount")
+                                ]
                             },
                             xAxis: {
                                 type: "category",
@@ -237,12 +192,12 @@ const schema = {
                             },
                             series: [
                                 {
-                                    name: "总数量",
+                                    name: i18n.t("scada.statics.scanRate.totalCount"),
                                     type: "bar",
                                     data: [10000, 9500, 10500, 9800, 10200, 9200, 9700, 9400, 9100, 9600, 10100, 9900]
                                 },
                                 {
-                                    name: "成功数量",
+                                    name: i18n.t("scada.statics.scanRate.successCount"),
                                     type: "bar",
                                     data: [9991, 9466, 10490, 9780, 10190, 9151, 9662, 9354, 9001, 9542, 10077, 9889]
                                 }
@@ -256,7 +211,7 @@ const schema = {
                         type: "chart",
                         config: {
                             title: {
-                                text: "扫码率分布"
+                                text: i18n.t("scada.statics.scanRate.chart.distribution")
                             },
                             tooltip: {
                                 trigger: "item",
@@ -268,7 +223,7 @@ const schema = {
                             },
                             series: [
                                 {
-                                    name: "扫码率区间",
+                                    name: i18n.t("scada.statics.scanRate.chart.distributionRange"),
                                     type: "pie",
                                     radius: "50%",
                                     data: [

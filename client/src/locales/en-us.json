@@ -941,6 +941,10 @@
     "scada.statics.scanRate.maxScanRate": "Max Scan Rate",
     "scada.statics.scanRate.minScanRate": "Min Scan Rate",
     "scada.statics.scanRate.scannerCount": "Scanner Count",
+    "scada.statics.scanRate.chart.cardTitle": "Scan Rate Chart",
+    "scada.statics.scanRate.chart.scannerCompare": "Scanner Comparison",
+    "scada.statics.scanRate.chart.distribution": "Scan Rate Distribution",
+    "scada.statics.scanRate.chart.distributionRange": "Scan Rate Range",
 
     "scada.log.pageTitle": "WCS Log Management",
     "scada.log.logType": "Log Type",

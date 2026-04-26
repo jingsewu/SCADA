@@ -1,5 +1,6 @@
 import schema2component from "@/utils/schema2component";
 import { api_crud_search } from "@/pages/constantApi";
+import i18n from "i18next";
 
 // ==================== 静态模拟数据 ====================
 // TODO: 后端接口就绪后，将以下静态数据替换为 API 调用
@@ -25,45 +26,17 @@ const searchIdentity = "ScanRateLog";
 const crudColumns = [
     {
         name: "dvcNo",
-        label: "scada.statics.traffic.dvcNo",
-        searchable: {
-            type: "input-text",
-            placeholder: "scada.statics.traffic.dvcNo.placeholder"
-        }
+        label: "scada.statics.traffic.dvcNo"
     },
     {
         name: "scannerNo",
-        label: "scada.statics.traffic.scannerNo",
-        searchable: {
-            type: "input-text",
-            placeholder: "scada.statics.traffic.scannerNo.placeholder"
-        }
+        label: "scada.statics.traffic.scannerNo"
     },
     {
         name: "flowTotal",
         label: "scada.statics.traffic.flowTotal",
         sortable: true
     },
-    {
-        type: "operation",
-        label: "table.operation",
-        buttons: [
-            {
-                type: "button",
-                label: "button.view",
-                actionType: "dialog",
-                dialog: {
-                    title: "button.view",
-                    body: [
-                        {
-                            type: "tpl",
-                            tpl: "scada.statics.traffic.detailInfo"
-                        }
-                    ]
-                }
-            }
-        ]
-    }
 ];
 
 const schema = {
@@ -75,9 +48,8 @@ const schema = {
             type: "form",
             title: "",
             mode: "horizontal",
-            wrapWithPanel: false,
             className: "m-b-md",
-            // TODO: 对接后端时，将 target 指向图表和表格组件以触发刷新
+            target: "trafficCrud",
             body: [
                 {
                     type: "select",
@@ -192,7 +164,11 @@ const schema = {
                         axisPointer: { type: "shadow" }
                     },
                     legend: {
-                        data: ["scada.statics.traffic.chart.totalFlow", "scada.statics.traffic.chart.validRead", "scada.statics.traffic.chart.invalidRead"]
+                        data: [
+                            i18n.t("scada.statics.traffic.chart.totalFlow"),
+                            i18n.t("scada.statics.traffic.chart.validRead"),
+                            i18n.t("scada.statics.traffic.chart.invalidRead")
+                        ]
                     },
                     grid: {
                         left: "3%",
@@ -209,11 +185,11 @@ const schema = {
                     },
                     yAxis: {
                         type: "value",
-                        name: "scada.statics.traffic.chart.quantity"
+                        name: i18n.t("scada.statics.traffic.chart.quantity")
                     },
                     series: [
                         {
-                            name: "scada.statics.traffic.chart.totalFlow",
+                            name: i18n.t("scada.statics.traffic.chart.totalFlow"),
                             type: "bar",
                             data: flowTotalData,
                             itemStyle: {
@@ -225,7 +201,7 @@ const schema = {
                             }
                         },
                         {
-                            name: "scada.statics.traffic.chart.validRead",
+                            name: i18n.t("scada.statics.traffic.chart.validRead"),
                             type: "bar",
                             data: readCountData,
                             itemStyle: {
@@ -233,7 +209,7 @@ const schema = {
                             }
                         },
                         {
-                            name: "scada.statics.traffic.chart.invalidRead",
+                            name: i18n.t("scada.statics.traffic.chart.invalidRead"),
                             type: "bar",
                             data: noReadCountData,
                             itemStyle: {
@@ -258,7 +234,7 @@ const schema = {
                 config: {
                     tooltip: {
                         trigger: "axis",
-                        formatter: "{b}<br/>{a}: {c} scada.statics.traffic.chart.unitFlowUnit"
+                        formatter: `{b}<br/>{a}: {c} ${i18n.t("scada.statics.traffic.chart.unitFlowUnit")}`
                     },
                     grid: {
                         left: "3%",
@@ -275,14 +251,14 @@ const schema = {
                     },
                     yAxis: {
                         type: "value",
-                        name: "scada.statics.traffic.chart.unitFlowUnit",
+                        name: i18n.t("scada.statics.traffic.chart.unitFlowUnit"),
                         axisLabel: {
                             formatter: "{value}"
                         }
                     },
                     series: [
                         {
-                            name: "scada.statics.traffic.chart.unitFlow",
+                            name: i18n.t("scada.statics.traffic.chart.unitFlow"),
                             type: "bar",
                             data: [7.21, 1.17, 7.63, 6.04, 8.75, 8.13, 7.00, 5.50, 8.25, 6.46, 5.92, 7.83],
                             itemStyle: {
@@ -309,6 +285,7 @@ const schema = {
         // ========== 5. CRUD 数据明细表格 ==========
         {
             type: "crud",
+            name: "trafficCrud",
             syncLocation: false,
             api: {
                 ...api_crud_search
@@ -337,11 +314,7 @@ const schema = {
                     showPageInput: true
                 }
             ],
-            autoGenerateFilter: {
-                columnsNum: 3,
-                showBtnToolbar: true
-            },
-            features: ["create", "filter", "view", "update", "delete", "bulkDelete"]
+            features: ["create", "update", "delete", "bulkDelete"]
         }
     ]
 };

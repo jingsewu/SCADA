@@ -940,6 +940,10 @@
     "scada.statics.scanRate.maxScanRate": "最高扫码率",
     "scada.statics.scanRate.minScanRate": "最低扫码率",
     "scada.statics.scanRate.scannerCount": "统计扫码器数",
+    "scada.statics.scanRate.chart.cardTitle": "扫码率统计图表",
+    "scada.statics.scanRate.chart.scannerCompare": "扫码器对比",
+    "scada.statics.scanRate.chart.distribution": "扫码率分布",
+    "scada.statics.scanRate.chart.distributionRange": "扫码率区间",
 
     "scada.log.pageTitle": "WCS日志管理",
     "scada.log.logType": "日志类型",
