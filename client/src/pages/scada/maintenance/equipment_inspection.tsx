@@ -1,14 +1,35 @@
 import schema2component from "@/utils/schema2component";
 import { api_crud_search } from "@/pages/constantApi";
-import {
-    inspection_plan_create,
-    inspection_plan_delete,
-    inspection_plan_import,
-    inspection_plan_calendar,
-    inspection_record_create,
-    inspection_record_delete
-} from "@/pages/scada/constants/api_constant";
 import i18n from "i18next";
+
+// ===== Mock 数据（临时，后端就绪后移除）=====
+const MOCK_SUCCESS = { status: 200, data: { status: 0, msg: "操作成功" } };
+const PLAN_MOCK_ITEMS = [
+    { id: 1, planName: "输送线日常巡检", planType: "日常巡检", deviceNo: "CONV-001", deviceName: "主输送线", cronExpression: "0 8 * * *", estimatedHours: 2, assignee: "张三", inspectionContent: "检查输送带磨损情况，润滑各运动部件", status: "启用", remark: "" },
+    { id: 2, planName: "AGV充电桩周检", planType: "周期保养", deviceNo: "AGV-CHG-001", deviceName: "AGV充电站1号", cronExpression: "0 9 * * 1", estimatedHours: 3, assignee: "李四", inspectionContent: "检查充电接口，清洁设备，检查电气连接", status: "启用", remark: "每周一执行" },
+    { id: 3, planName: "叉车年度维护", planType: "年度维护", deviceNo: "FKC-001", deviceName: "电动叉车1号", cronExpression: "0 8 1 1 *", estimatedHours: 8, assignee: "王五", inspectionContent: "全面检查叉车各部件，更换液压油，检测制动系统", status: "停用", remark: "年度大保养" }
+];
+const RECORD_MOCK_ITEMS = [
+    { id: 1, planName: "输送线日常巡检", deviceNo: "CONV-001", inspector: "李四", inspectionTime: "2026-04-26 09:00:00", result: "正常", abnormalDesc: null, handleMethod: null, remark: "" },
+    { id: 2, planName: "输送线日常巡检", deviceNo: "CONV-001", inspector: "李四", inspectionTime: "2026-04-25 09:15:00", result: "异常", abnormalDesc: "输送带有轻微磨损，张紧度不足", handleMethod: "已调整张紧轮，记录待跟进", remark: "" },
+    { id: 3, planName: "AGV充电桩周检", deviceNo: "AGV-CHG-001", inspector: "张三", inspectionTime: "2026-04-21 10:00:00", result: "正常", abnormalDesc: null, handleMethod: null, remark: "" },
+    { id: 4, planName: "输送线日常巡检", deviceNo: "CONV-001", inspector: "王五", inspectionTime: "2026-04-24 08:30:00", result: "待处理", abnormalDesc: "传感器偶发故障", handleMethod: null, remark: "" }
+];
+const CALENDAR_MOCK_ITEMS = [
+    { date: "2026-04-26", planName: "输送线日常巡检", planType: "日常巡检" },
+    { date: "2026-04-26", planName: "主机房日检", planType: "日常巡检" },
+    { date: "2026-04-21", planName: "AGV充电桩周检", planType: "周期保养" },
+    { date: "2026-04-28", planName: "AGV充电桩周检", planType: "周期保养" },
+    { date: "2026-04-01", planName: "叉车年度维护", planType: "年度维护" }
+];
+const mock_crud_plan = { ...api_crud_search, mock: { status: 200, data: { status: 0, data: { items: PLAN_MOCK_ITEMS, total: PLAN_MOCK_ITEMS.length } } } };
+const mock_crud_record = { ...api_crud_search, mock: { status: 200, data: { status: 0, data: { items: RECORD_MOCK_ITEMS, total: RECORD_MOCK_ITEMS.length } } } };
+const mock_plan_create = { method: "post", url: "/scada/inspection-plan/createOrUpdate", mock: MOCK_SUCCESS };
+const mock_plan_delete = { method: "post", url: "/scada/inspection-plan/delete/${id}", mock: MOCK_SUCCESS };
+const mock_plan_import = { method: "post", url: "/scada/inspection-plan/import", mock: MOCK_SUCCESS };
+const mock_plan_calendar = { method: "get", url: "/scada/inspection-plan/calendar", mock: { status: 200, data: { status: 0, data: { items: CALENDAR_MOCK_ITEMS } } } };
+const mock_record_create = { method: "post", url: "/scada/inspection-record/createOrUpdate", mock: MOCK_SUCCESS };
+const mock_record_delete = { method: "post", url: "/scada/inspection-record/delete/${id}", mock: MOCK_SUCCESS };
 
 // ===== 巡检计划 =====
 const planFormBody = [
@@ -279,7 +300,7 @@ const schema = {
                             type: "crud",
                             syncLocation: false,
                             name: "InspectionPlanTable",
-                            api: api_crud_search,
+                            api: mock_crud_plan,
                             defaultParams: {
                                 searchIdentity: "MInspectionPlan",
                                 showColumns: planColumns,
@@ -308,7 +329,7 @@ const schema = {
                                                 closeOnOutside: true,
                                                 body: {
                                                     type: "form",
-                                                    api: inspection_plan_create,
+                                                    api: mock_plan_create,
                                                     body: planFormBody
                                                 }
                                             }
@@ -323,7 +344,7 @@ const schema = {
                                                 body: {
                                                     type: "crud",
                                                     syncLocation: false,
-                                                    api: api_crud_search,
+                                                    api: mock_crud_record,
                                                     defaultParams: {
                                                         searchIdentity: "MInspectionRecord",
                                                         showColumns: recordColumns,
@@ -343,7 +364,7 @@ const schema = {
                                             level: "danger",
                                             confirmText: "scada.maintenance.inspection.confirmDeletePlan",
                                             confirmTitle: "common.deleteConfirmTitle",
-                                            api: inspection_plan_delete,
+                                            api: mock_plan_delete,
                                             reload: "InspectionPlanTable"
                                         }
                                     ],
@@ -359,7 +380,7 @@ const schema = {
                                         title: "scada.maintenance.inspection.addPlanDrawer",
                                         body: {
                                             type: "form",
-                                            api: inspection_plan_create,
+                                            api: mock_plan_create,
                                             body: planFormBody
                                         }
                                     }
@@ -372,7 +393,7 @@ const schema = {
                                         title: "scada.maintenance.inspection.importPlanDialog",
                                         body: {
                                             type: "form",
-                                            api: inspection_plan_import,
+                                            api: mock_plan_import,
                                             body: [
                                                 {
                                                     type: "input-file",
@@ -399,7 +420,7 @@ const schema = {
                             type: "crud",
                             syncLocation: false,
                             name: "InspectionRecordTable",
-                            api: api_crud_search,
+                            api: mock_crud_record,
                             defaultParams: {
                                 searchIdentity: "MInspectionRecord",
                                 showColumns: recordColumns,
@@ -428,7 +449,7 @@ const schema = {
                                                 closeOnOutside: true,
                                                 body: {
                                                     type: "form",
-                                                    api: inspection_record_create,
+                                                    api: mock_record_create,
                                                     body: recordFormBody
                                                 }
                                             }
@@ -454,7 +475,7 @@ const schema = {
                                             level: "danger",
                                             confirmText: "scada.maintenance.inspection.confirmDeleteRecord",
                                             confirmTitle: "common.deleteConfirmTitle",
-                                            api: inspection_record_delete,
+                                            api: mock_record_delete,
                                             reload: "InspectionRecordTable"
                                         }
                                     ],
@@ -470,7 +491,7 @@ const schema = {
                                         title: "scada.maintenance.inspection.addRecordDrawer",
                                         body: {
                                             type: "form",
-                                            api: inspection_record_create,
+                                            api: mock_record_create,
                                             body: recordFormBody
                                         }
                                     }
@@ -512,7 +533,7 @@ const schema = {
                         {
                             type: "service",
                             name: "calendarService",
-                            api: inspection_plan_calendar,
+                            api: mock_plan_calendar,
                             body: [
                                 {
                                     type: "custom",
