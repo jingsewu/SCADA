@@ -146,7 +146,7 @@ const crudColumns = [
         name: "online",
         label: "scada.monitor.networkTopology.onlineStatus",
         type: "tpl",
-        tpl: "<span class='label label-${online ? \"success\" : \"danger\"}'>${online ? \"${scada.monitor.networkTopology.online | t}\" : \"${scada.monitor.networkTopology.offline | t}\"}</span>"
+        tpl: "<span class='label label-${online === true ? \"success\" : online === false ? \"danger\" : \"default\"}'>${(online === true ? 'scada.monitor.networkTopology.online' : online === false ? 'scada.monitor.networkTopology.offline' : 'scada.monitor.networkTopology.unknown') | t}</span>"
     },
     {
         name: "lastHeartbeat",
@@ -249,106 +249,99 @@ const schema = {
                 {
                     title: "scada.monitor.networkTopology.topologyTab",
                     body: [
-                        // TODO: mock — replace data with api: network_device_topology when backend ready
+                        // TODO: mock — when backend ready, wrap in service with api: network_device_topology
+                        // and change `const devices = MOCK_DEVICES` to `const devices = data?.items || []`
                         {
-                            type: "service",
-                            data: { items: MOCK_DEVICES },
-                            body: [
-                                {
-                                    type: "custom",
-                                    html: "<div id='topology-container' style='width:100%;height:600px;border:1px solid #e8e8e8;border-radius:4px;background:#fafafa;'></div>",
-                                    onMount: (dom: HTMLElement, data: any) => {
-                                        const container = dom.querySelector("#topology-container");
-                                        if (!container) return;
+                            type: "custom",
+                            html: "<div id='topology-container' style='width:100%;height:600px;border:1px solid #e8e8e8;border-radius:4px;background:#fafafa;overflow:hidden;'></div>",
+                            onMount: (dom: HTMLElement, data: any) => {
+                                const container = dom.querySelector("#topology-container") as HTMLElement;
+                                if (!container) return;
 
-                                        const t = i18n.t.bind(i18n);
-                                        const devices = data?.items || [];
-                                        const width = container.clientWidth;
-                                        const height = container.clientHeight;
+                                const t = i18n.t.bind(i18n);
+                                const devices = MOCK_DEVICES; // TODO: mock
 
-                                        // Device type keys for backend values
-                                        const deviceTypes = ["服务器", "交换机", "PLC", "网关", "扫码器", "变频器"];
+                                // Fixed internal coordinate system — SVG scales to container via viewBox
+                                const W = 1200;
+                                const H = 600;
 
-                                        // Group devices by type into layers
-                                        const layers: Record<string, any[]> = {};
-                                        deviceTypes.forEach(type => { layers[type] = []; });
-                                        devices.forEach((d: any) => {
-                                            const type = d.deviceType || "其他";
-                                            if (!layers[type]) layers[type] = [];
-                                            layers[type].push(d);
-                                        });
+                                const deviceTypes = ["服务器", "交换机", "PLC", "网关", "扫码器", "变频器"];
 
-                                        const layerLabels: Record<string, string> = {
-                                            "服务器": t("scada.monitor.networkTopology.serverLayer"),
-                                            "交换机": t("scada.monitor.networkTopology.switchLayer"),
-                                            "PLC": t("scada.monitor.networkTopology.plcLayer"),
-                                            "网关": t("scada.monitor.networkTopology.gatewayLayer"),
-                                            "扫码器": t("scada.monitor.networkTopology.scannerLayer"),
-                                            "变频器": t("scada.monitor.networkTopology.vfdLayer")
-                                        };
+                                const layers: Record<string, any[]> = {};
+                                deviceTypes.forEach(type => { layers[type] = []; });
+                                devices.forEach((d: any) => {
+                                    const type = d.deviceType || "其他";
+                                    if (!layers[type]) layers[type] = [];
+                                    layers[type].push(d);
+                                });
 
-                                        let svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">`;
-                                        svg += `<rect width="${width}" height="${height}" fill="#fafafa"/>`;
-                                        svg += `<text x="${width / 2}" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#333">${t("scada.monitor.networkTopology.profinetDiag")}</text>`;
+                                const layerLabels: Record<string, string> = {
+                                    "服务器": t("scada.monitor.networkTopology.serverLayer"),
+                                    "交换机": t("scada.monitor.networkTopology.switchLayer"),
+                                    "PLC": t("scada.monitor.networkTopology.plcLayer"),
+                                    "网关": t("scada.monitor.networkTopology.gatewayLayer"),
+                                    "扫码器": t("scada.monitor.networkTopology.scannerLayer"),
+                                    "变频器": t("scada.monitor.networkTopology.vfdLayer")
+                                };
 
-                                        const nodePositions: Record<string, { x: number; y: number }> = {};
-                                        let layerY = 60;
-                                        const layerHeight = (height - 80) / deviceTypes.length;
+                                // viewBox: no dependency on clientWidth, works even when tab is hidden on mount
+                                let svg = `<svg width="100%" height="100%" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">`;
+                                svg += `<rect width="${W}" height="${H}" fill="#fafafa"/>`;
+                                svg += `<text x="${W / 2}" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#333">${t("scada.monitor.networkTopology.profinetDiag")}</text>`;
 
-                                        deviceTypes.forEach((type) => {
-                                            const items = layers[type] || [];
-                                            if (items.length === 0) {
-                                                layerY += layerHeight;
-                                                return;
-                                            }
+                                const nodePositions: Record<string, { x: number; y: number }> = {};
+                                let layerY = 60;
+                                const layerHeight = (H - 80) / deviceTypes.length;
 
-                                            // Layer label
-                                            svg += `<text x="10" y="${layerY + 15}" font-size="12" fill="#999">${layerLabels[type]}</text>`;
-
-                                            const nodeWidth = 120;
-                                            const nodeHeight = 50;
-                                            const gap = Math.min(30, (width - 100 - items.length * nodeWidth) / (items.length + 1));
-                                            const startX = 80;
-
-                                            items.forEach((item: any, i: number) => {
-                                                const x = startX + i * (nodeWidth + gap);
-                                                const y = layerY + 25;
-                                                const fillColor = item.online ? "#52c41a" : item.online === false ? "#ff4d4f" : "#d9d9d9";
-                                                const textColor = item.online ? "#fff" : item.online === false ? "#fff" : "#666";
-
-                                                nodePositions[item.deviceNo] = { x: x + nodeWidth / 2, y: y + nodeHeight / 2 };
-
-                                                svg += `<rect x="${x}" y="${y}" width="${nodeWidth}" height="${nodeHeight}" rx="6" fill="${fillColor}" stroke="#e8e8e8"/>`;
-                                                svg += `<text x="${x + nodeWidth / 2}" y="${y + 20}" text-anchor="middle" font-size="11" fill="${textColor}" font-weight="bold">${item.deviceNo || ""}</text>`;
-                                                svg += `<text x="${x + nodeWidth / 2}" y="${y + 36}" text-anchor="middle" font-size="10" fill="${textColor}">${item.ipAddress || ""}</text>`;
-                                            });
-
-                                            layerY += layerHeight;
-                                        });
-
-                                        // Draw connections based on parentDevice
-                                        devices.forEach((d: any) => {
-                                            if (d.parentDevice && nodePositions[d.parentDevice] && nodePositions[d.deviceNo]) {
-                                                const from = nodePositions[d.parentDevice];
-                                                const to = nodePositions[d.deviceNo];
-                                                svg += `<line x1="${from.x}" y1="${from.y + 25}" x2="${to.x}" y2="${to.y - 25}" stroke="#91d5ff" stroke-width="2"/>`;
-                                            }
-                                        });
-
-                                        // Legend
-                                        const legendY = height - 30;
-                                        svg += `<rect x="10" y="${legendY}" width="12" height="12" rx="2" fill="#52c41a"/>`;
-                                        svg += `<text x="26" y="${legendY + 10}" font-size="11" fill="#666">${t("scada.monitor.networkTopology.online")}</text>`;
-                                        svg += `<rect x="80" y="${legendY}" width="12" height="12" rx="2" fill="#ff4d4f"/>`;
-                                        svg += `<text x="96" y="${legendY + 10}" font-size="11" fill="#666">${t("scada.monitor.networkTopology.offline")}</text>`;
-                                        svg += `<rect x="150" y="${legendY}" width="12" height="12" rx="2" fill="#d9d9d9"/>`;
-                                        svg += `<text x="166" y="${legendY + 10}" font-size="11" fill="#666">${t("scada.monitor.networkTopology.unknown")}</text>`;
-
-                                        svg += "</svg>";
-                                        container.innerHTML = svg;
+                                deviceTypes.forEach((type) => {
+                                    const items = layers[type] || [];
+                                    if (items.length === 0) {
+                                        layerY += layerHeight;
+                                        return;
                                     }
-                                }
-                            ]
+
+                                    svg += `<text x="10" y="${layerY + 15}" font-size="12" fill="#999">${layerLabels[type]}</text>`;
+
+                                    const nodeWidth = 120;
+                                    const nodeHeight = 50;
+                                    const gap = Math.min(30, (W - 100 - items.length * nodeWidth) / (items.length + 1));
+                                    const startX = 80;
+
+                                    items.forEach((item: any, i: number) => {
+                                        const x = startX + i * (nodeWidth + gap);
+                                        const y = layerY + 25;
+                                        const fillColor = item.online === true ? "#52c41a" : item.online === false ? "#ff4d4f" : "#d9d9d9";
+                                        const textColor = item.online !== null ? "#fff" : "#666";
+
+                                        nodePositions[item.deviceNo] = { x: x + nodeWidth / 2, y: y + nodeHeight / 2 };
+
+                                        svg += `<rect x="${x}" y="${y}" width="${nodeWidth}" height="${nodeHeight}" rx="6" fill="${fillColor}" stroke="#e8e8e8"/>`;
+                                        svg += `<text x="${x + nodeWidth / 2}" y="${y + 20}" text-anchor="middle" font-size="11" fill="${textColor}" font-weight="bold">${item.deviceNo || ""}</text>`;
+                                        svg += `<text x="${x + nodeWidth / 2}" y="${y + 36}" text-anchor="middle" font-size="10" fill="${textColor}">${item.ipAddress || ""}</text>`;
+                                    });
+
+                                    layerY += layerHeight;
+                                });
+
+                                devices.forEach((d: any) => {
+                                    if (d.parentDevice && nodePositions[d.parentDevice] && nodePositions[d.deviceNo]) {
+                                        const from = nodePositions[d.parentDevice];
+                                        const to = nodePositions[d.deviceNo];
+                                        svg += `<line x1="${from.x}" y1="${from.y + 25}" x2="${to.x}" y2="${to.y - 25}" stroke="#91d5ff" stroke-width="2"/>`;
+                                    }
+                                });
+
+                                const legendY = H - 30;
+                                svg += `<rect x="10" y="${legendY}" width="12" height="12" rx="2" fill="#52c41a"/>`;
+                                svg += `<text x="26" y="${legendY + 10}" font-size="11" fill="#666">${t("scada.monitor.networkTopology.online")}</text>`;
+                                svg += `<rect x="80" y="${legendY}" width="12" height="12" rx="2" fill="#ff4d4f"/>`;
+                                svg += `<text x="96" y="${legendY + 10}" font-size="11" fill="#666">${t("scada.monitor.networkTopology.offline")}</text>`;
+                                svg += `<rect x="150" y="${legendY}" width="12" height="12" rx="2" fill="#d9d9d9"/>`;
+                                svg += `<text x="166" y="${legendY + 10}" font-size="11" fill="#666">${t("scada.monitor.networkTopology.unknown")}</text>`;
+
+                                svg += "</svg>";
+                                container.innerHTML = svg;
+                            }
                         }
                     ]
                 }
